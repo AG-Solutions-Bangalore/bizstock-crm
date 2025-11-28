@@ -83,11 +83,12 @@ function LoginAuth() {
         toast.error("Login Failed: Unexpected response.");
       }
     } catch (error) {
+      console.log(error?.response?.data?.error)
       toast({
         variant: "destructive",
         title: "Login Failed",
         description:
-          error.response?.data?.message || "Please check your credentials.",
+        error?.response?.data?.error || "Please check your credentials.",
       });
     } finally {
       setIsLoading(false);
@@ -206,7 +207,13 @@ function LoginAuth() {
                   </motion.div>
 
                   <CardDescription className="flex justify-between mt-2">
-                    <span></span>
+                 
+                    <span
+                      onClick={() => navigate("/signup")}
+                      className="text-yellow-800 underline cursor-pointer"
+                    >
+                      Start your free trial
+                    </span>
                     <span
                       onClick={() => navigate("/forgot-password")}
                       className="text-yellow-800 underline cursor-pointer"

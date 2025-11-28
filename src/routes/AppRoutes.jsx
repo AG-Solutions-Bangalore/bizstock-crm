@@ -23,7 +23,7 @@ import GoDownList from "@/app/master/godown/GoDownList";
 import ItemList from "@/app/master/item/ItemList";
 import TeamList from "@/app/master/team/TeamList";
 import PaymentForm from "@/app/payment/PaymentForm";
-import PaymentList from "@/app/payment/paymentList";
+
 import PreBookingForm from "@/app/prebooking/PreBookingForm";
 import PreBookingList from "@/app/prebooking/PreBookingList";
 import PreBookingView from "@/app/prebooking/PreBookingView";
@@ -47,6 +47,8 @@ import InvoiceList from "@/app/invoice/InvoiceList";
 import InvoiceForm from "@/app/invoice/InvoiceForm";
 import PaymentSummaryReport from "@/app/report/PaymentSummaryReport";
 import PaymentLedgerReport from "@/app/report/PaymentLedgerReport";
+import PaymentList from "@/app/payment/PaymentList";
+import Signup from "@/app/auth/Signup";
 
 function AppRoutes() {
   return (
@@ -56,6 +58,7 @@ function AppRoutes() {
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/maintenance" element={<Maintenance />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
 
         <Route path="/" element={<ProtectedRoute />}>
