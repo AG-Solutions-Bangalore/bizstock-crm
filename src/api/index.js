@@ -6,6 +6,8 @@ export const DOT_ENV = `/panel-fetch-dotenv`;
 export const PANEL_CHECK = `/panelCheck`;
 //PANEL_LOGIN
 export const PANEL_LOGIN = `/login`;
+//CREATE_SIGNUP
+export const CREATE_SIGNUP = `/createsignup`;
 //PANEL_FORGOT_PASSWORD
 export const PANEL_FORGOT_PASSWORD = `/forgot-password`;
 // //WEB_ENQUIRY

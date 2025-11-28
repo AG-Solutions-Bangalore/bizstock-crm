@@ -105,7 +105,7 @@ export function NavUser({ user }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on :18/09/2025
+                      Updated on :28/11/2025
                     </span>
                   </div>
                 </div>
