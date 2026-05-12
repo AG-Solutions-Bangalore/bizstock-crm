@@ -12,14 +12,29 @@ import Loader from "@/components/loader/Loader";
 import { Input } from "@/components/ui/input";
 import { ButtonConfig } from "@/config/ButtonConfig";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toggleColumn } from "@/redux/columnVisibilitySlice";
+import { ChevronDown } from "lucide-react";
 
 const Stock = () => {
   const containerRef = useRef();
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
-  // const doublebranch = "No";
+  const columnVisibility = useSelector((state) => state.columnVisibility);
+  const dispatch = useDispatch();
+
+  const isDoubleBranch = singlebranch === "Yes" && doublebranch === "Yes";
+
+  const handleToggle = (key) => {
+    dispatch(toggleColumn(key));
+  };
   const sliderTrackRefTop = useRef(null);
   const sliderTrackRefBottom = useRef(null);
   const [maxTotal, setMaxTotal] = useState(0);
@@ -464,14 +479,38 @@ const Stock = () => {
               </div>
 
               {/* Print Button */}
-              <div className="flex justify-center md:justify-end w-full md:w-auto">
-                <Button
-                  className={`w-full sm:w-auto ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-                  onClick={handlePrintPdf}
-                >
-                  <Printer className="h-4 w-4 mr-1" /> Print
-                </Button>
-              </div>
+                <div className="flex gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full sm:w-auto">
+                        Columns <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {["box", "piece"].map((key) => (
+                        <DropdownMenuItem
+                          key={key}
+                          onSelect={(e) => e.preventDefault()}
+                          className="flex items-center gap-2"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={columnVisibility[key]}
+                            onChange={() => handleToggle(key)}
+                            className="w-4 h-4"
+                          />
+                          <span className="capitalize">{key}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button
+                    className={`w-full sm:w-auto ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
+                    onClick={handlePrintPdf}
+                  >
+                    <Printer className="h-4 w-4 mr-1" /> Print
+                  </Button>
+                </div>
             </div>
           </div>
         </div>
@@ -509,41 +548,41 @@ const Stock = () => {
                     Item Name
                   </th>
 
-                  {singlebranch === "Yes" && doublebranch === "Yes" ? (
+                  {isDoubleBranch ? (
                     <>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Open Balance
                       </th>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Purchase
                       </th>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Purchase Return
                       </th>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Dispatch
                       </th>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Dispatch Return
                       </th>
                       <th
                         className="border border-black px-2 py-2 text-center"
-                        colSpan={2}
+                        colSpan={(columnVisibility.box ? 1 : 0) + (columnVisibility.piece ? 1 : 0)}
                       >
                         Close Balance
                       </th>
@@ -590,44 +629,20 @@ const Stock = () => {
                   )}
                 </tr>
 
-                {singlebranch === "Yes" && doublebranch === "Yes" && (
+                {isDoubleBranch && (
                   <tr>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Box
-                    </th>
-                    <th className="border border-black px-2 py-2 text-center">
-                      Piece
-                    </th>
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
+                    {columnVisibility.box && <th className="border border-black px-2 py-2 text-center">Box</th>}
+                    {columnVisibility.piece && <th className="border border-black px-2 py-2 text-center">Piece</th>}
                   </tr>
                 )}
               </thead>
@@ -733,108 +748,121 @@ const Stock = () => {
                             {buyer.item_name}
                           </td>
 
-                          {singlebranch === "Yes" && doublebranch === "Yes" ? (
+                          {isDoubleBranch ? (
                             <>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  openingBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {openingBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  openingBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {openingBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    openingBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {openingBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    openingBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {openingBP.piece}
+                                </td>
+                              )}
 
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  purchaseBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {purchaseBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  purchaseBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {purchaseBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    purchaseBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {purchaseBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    purchaseBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {purchaseBP.piece}
+                                </td>
+                              )}
 
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  purchaseRBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {purchaseRBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  purchaseRBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {purchaseRBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    purchaseRBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {purchaseRBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    purchaseRBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {purchaseRBP.piece}
+                                </td>
+                              )}
 
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  saleBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {saleBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  saleBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {saleBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    saleBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {saleBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    saleBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {saleBP.piece}
+                                </td>
+                              )}
 
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  saleRBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {saleRBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  saleRBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {saleRBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    saleRBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {saleRBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    saleRBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {saleRBP.piece}
+                                </td>
+                              )}
 
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  totalBP.box == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {totalBP.box}
-                              </td>
-                              <td
-                                className={`border border-black px-2 py-2 text-right ${
-                                  totalBP.piece == "0" ? "opacity-50" : ""
-                                }`}
-                              >
-                                {" "}
-                                {totalBP.piece}
-                              </td>
+                              {columnVisibility.box && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    totalBP.box == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {totalBP.box}
+                                </td>
+                              )}
+                              {columnVisibility.piece && (
+                                <td
+                                  className={`border border-black px-2 py-2 text-right ${
+                                    totalBP.piece == "0" ? "opacity-50" : ""
+                                  }`}
+                                >
+                                  {totalBP.piece}
+                                </td>
+                              )}
                             </>
                           ) : (
                             <>
@@ -843,7 +871,6 @@ const Stock = () => {
                                   opening == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {opening}
                               </td>
                               <td
@@ -851,7 +878,6 @@ const Stock = () => {
                                   purchase == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {purchase}
                               </td>
                               <td
@@ -859,7 +885,6 @@ const Stock = () => {
                                   purchaseR == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {purchaseR}
                               </td>
                               <td
@@ -867,7 +892,6 @@ const Stock = () => {
                                   sale == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {sale}
                               </td>
                               <td
@@ -875,7 +899,6 @@ const Stock = () => {
                                   saleR == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {saleR}
                               </td>
                               <td
@@ -883,7 +906,6 @@ const Stock = () => {
                                   total == "0" ? "opacity-50" : ""
                                 }`}
                               >
-                                {" "}
                                 {total}
                               </td>
                             </>
