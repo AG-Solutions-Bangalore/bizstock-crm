@@ -1,11 +1,12 @@
+import ENV from "@/config/ENV";
 import CryptoJS from "crypto-js";
 
-const ENCRYPTION_KEY = import.meta.env.VITE_SECRET_KEY;
+const ENCRYPTION_KEY = ENV.ENCRYPTION_KEY;
 
 export const encryptId = (id) => {
   try {
     return encodeURIComponent(
-      CryptoJS.AES.encrypt(id.toString(), ENCRYPTION_KEY).toString()
+      CryptoJS.AES.encrypt(id.toString(), ENCRYPTION_KEY).toString(),
     );
   } catch (error) {
     console.error("Error encrypting ID:", error);
@@ -17,7 +18,7 @@ export const decryptId = (encryptedId) => {
   try {
     const bytes = CryptoJS.AES.decrypt(
       decodeURIComponent(encryptedId),
-      ENCRYPTION_KEY
+      ENCRYPTION_KEY,
     );
     return bytes.toString(CryptoJS.enc.Utf8);
   } catch (error) {

@@ -1,30 +1,52 @@
 import { DISPATCH_REPORT } from "@/api";
-import { MemoizedSelect } from "@/components/common/MemoizedSelect";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ButtonConfig } from "@/config/ButtonConfig";
 import { useToast } from "@/hooks/use-toast";
 import { useFetchBuyers } from "@/hooks/useApi";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import ExcelJS from "exceljs";
-import { Printer, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import moment from "moment";
-import { useRef, useState } from "react";
-import { RiFileExcel2Line } from "react-icons/ri";
+import { useRef, useState, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
+import { useSelector } from "react-redux";
 import Page from "../dashboard/page";
 import apiClient from "@/api/axios";
 import usetoken from "@/api/usetoken";
+import DispatchItemDetailsDialog from "./components/DispatchItemDetailsDialog";
+import DispatchItemDetailsView from "./components/DispatchItemDetailsView";
+import DispatchReportHeader from "./components/DispatchReportHeader";
+
 const DispatchReport = () => {
   const containerRef = useRef(null);
-  const [formData, setFormData] = useState({
-    from_date: moment().startOf("month").format("YYYY-MM-DD"),
-    to_date: moment().format("YYYY-MM-DD"),
-    sale_buyer: "",
+  const [selectedRef, setSelectedRef] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const singlebranch = useSelector((state) => state.auth.branch_s_unit);
+  const doublebranch = useSelector((state) => state.auth.branch_d_unit);
+  const isDoubleBranch = singlebranch === "Yes" && doublebranch === "Yes";
+  const columnVisibility = useSelector((state) => state.columnVisibility);
+
+  const [formData, setFormData] = useState(() => {
+    const saved = sessionStorage.getItem("dispatchReportFormData");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse saved form data", e);
+      }
+    }
+    return {
+      from_date: moment().startOf("month").format("YYYY-MM-DD"),
+      to_date: moment().format("YYYY-MM-DD"),
+      sale_buyer: "",
+    };
   });
+
+  useEffect(() => {
+    sessionStorage.setItem("dispatchReportFormData", JSON.stringify(formData));
+  }, [formData]);
+
   const { toast } = useToast();
   const token = usetoken();
 
@@ -47,7 +69,7 @@ const DispatchReport = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   };
@@ -104,13 +126,19 @@ const DispatchReport = () => {
     worksheet.addRow([`Dispatch Report`]);
     worksheet.addRow([
       `From: ${moment(formData.from_date).format("DD-MM-YYYY")} To: ${moment(
-        formData.to_date
+        formData.to_date,
       ).format("DD-MM-YYYY")}`,
     ]);
     worksheet.addRow([]);
 
     // Add headers
-    const headers = ["Ref", "Date", "Buyer", "Vehicle No", "Box"];
+    const headers = ["Ref", "Date", "Buyer", "Vehicle No"];
+    if (isDoubleBranch) {
+      if (columnVisibility.box) headers.push("Box");
+      if (columnVisibility.piece) headers.push("Piece");
+    } else {
+      if (columnVisibility.available_box) headers.push("Box");
+    }
     const headerRow = worksheet.addRow(headers);
     headerRow.eachCell((cell) => {
       cell.font = { bold: true };
@@ -124,15 +152,76 @@ const DispatchReport = () => {
 
     // Add transactions
     reportData?.dispatch?.forEach((transaction) => {
-      worksheet.addRow([
+      const rowData = [
         transaction.dispatch_ref_no,
         moment(transaction.dispatch_date).format("DD MMM YYYY"),
         transaction.buyer_name,
         transaction.dispatch_vehicle_no,
-
-        transaction.sum_dispatch_sub_box,
-      ]);
+      ];
+      if (isDoubleBranch) {
+        if (columnVisibility.box)
+          rowData.push(transaction.sum_dispatch_sub_box);
+        if (columnVisibility.piece)
+          rowData.push(transaction.sum_dispatch_sub_piece);
+      } else {
+        if (columnVisibility.available_box)
+          rowData.push(transaction.sum_dispatch_sub_box);
+      }
+      worksheet.addRow(rowData);
     });
+
+    if (showDetails && reportData?.details?.length > 0) {
+      worksheet.addRow([]);
+      worksheet.addRow(["Item Details"]);
+      const detailHeaders = [
+        "Ref No",
+        "Date",
+        "Item Name",
+        "Size",
+        "Brand",
+        "Category",
+        "Batch No",
+      ];
+      if (isDoubleBranch) {
+        if (columnVisibility.box) detailHeaders.push("Box");
+        if (columnVisibility.piece) detailHeaders.push("Piece");
+      } else {
+        if (columnVisibility.available_box) detailHeaders.push("Box");
+      }
+      const detHeaderRow = worksheet.addRow(detailHeaders);
+      detHeaderRow.eachCell((cell) => {
+        cell.font = { bold: true };
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "F3F4F6" },
+        };
+        cell.alignment = { horizontal: "center" };
+      });
+      reportData.details.forEach((item) => {
+        const dObj = reportData.dispatch.find(
+          (d) => d.dispatch_ref === item.dispatch_ref,
+        );
+        const detailRowData = [
+          dObj?.dispatch_ref_no || item.dispatch_ref,
+          moment(item.dispatch_date).format("DD MMM YYYY"),
+          item.item_name,
+          item.item_size,
+          item.item_brand,
+          item.item_category_id,
+          item.dispatch_sub_batch_no,
+        ];
+        if (isDoubleBranch) {
+          if (columnVisibility.box) detailRowData.push(item.dispatch_sub_box);
+          if (columnVisibility.piece)
+            detailRowData.push(item.dispatch_sub_piece);
+        } else {
+          if (columnVisibility.available_box)
+            detailRowData.push(item.dispatch_sub_box);
+        }
+        worksheet.addRow(detailRowData);
+      });
+    }
 
     // Generate and download Excel file
     const buffer = await workbook.xlsx.writeBuffer();
@@ -207,21 +296,43 @@ const DispatchReport = () => {
                     <th className="border border-gray-300 px-2 py-2 text-right">
                       Vehicle No
                     </th>
-                    <th className="border border-gray-300 px-2 py-2 text-right">
-                      Box{" "}
-                    </th>
+                    {isDoubleBranch ? (
+                      <>
+                        {columnVisibility.box && (
+                          <th className="border border-gray-300 px-2 py-2 text-right">
+                            Box
+                          </th>
+                        )}
+                        {columnVisibility.piece && (
+                          <th className="border border-gray-300 px-2 py-2 text-right">
+                            Piece
+                          </th>
+                        )}
+                      </>
+                    ) : (
+                      columnVisibility.available_box && (
+                        <th className="border border-gray-300 px-2 py-2 text-right">
+                          Box
+                        </th>
+                      )
+                    )}
                   </tr>
                 </thead>
                 <tbody>
                   {/* Transactions */}
                   {reportData?.dispatch?.map((transaction, index) => (
                     <tr key={index}>
-                      <td className="border border-gray-300 px-2 py-1 text-center border-l border-r">
+                      <td
+                        className="border border-gray-300 px-2 py-1 text-center border-l border-r text-blue-600 cursor-pointer hover:underline"
+                        onClick={() =>
+                          setSelectedRef(transaction?.dispatch_ref)
+                        }
+                      >
                         {transaction?.dispatch_ref_no}
                       </td>
                       <td className="border border-gray-300 px-2 py-1 font-medium">
                         {moment(transaction?.dispatch_date).format(
-                          "DD MMM YYYY"
+                          "DD MMM YYYY",
                         )}
                       </td>
                       <td className="border border-gray-300 px-2 py-1">
@@ -231,14 +342,42 @@ const DispatchReport = () => {
                       <td className="border border-gray-300 px-2 py-1 text-right">
                         {transaction?.dispatch_vehicle_no}
                       </td>
-                      <td className="border border-gray-300 px-2 py-1 text-right font-medium">
-                        {transaction?.sum_dispatch_sub_box}
-                      </td>
+                      {isDoubleBranch ? (
+                        <>
+                          {columnVisibility.box && (
+                            <td className="border border-gray-300 px-2 py-1 text-right font-medium">
+                              {transaction?.sum_dispatch_sub_box}
+                            </td>
+                          )}
+                          {columnVisibility.piece && (
+                            <td className="border border-gray-300 px-2 py-1 text-right font-medium">
+                              {transaction?.sum_dispatch_sub_piece}
+                            </td>
+                          )}
+                        </>
+                      ) : (
+                        columnVisibility.available_box && (
+                          <td className="border border-gray-300 px-2 py-1 text-right font-medium">
+                            {transaction?.sum_dispatch_sub_box}
+                          </td>
+                        )
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+
+            <DispatchItemDetailsView
+              formData={formData}
+              showDetails={showDetails}
+              setShowDetails={setShowDetails}
+              handlePrintPdf={handlePrintPdf}
+              downloadExcel={downloadExcel}
+              reportData={reportData}
+              isDoubleBranch={isDoubleBranch}
+              columnVisibility={columnVisibility}
+            />
           </div>
         </div>
       );
@@ -254,184 +393,25 @@ const DispatchReport = () => {
   return (
     <Page>
       <div className="p-0 md:p-4">
-        {/* Mobile View (sm:hidden) */}
-        <div className="sm:hidden">
-          <div
-            className={`sticky top-0 z-10 border border-gray-200 rounded-lg ${ButtonConfig.cardheaderColor} shadow-sm p-0 mb-2`}
-          >
-            <div className="flex flex-col gap-2">
-              {/* Title + Print Button */}
-              <div className="flex justify-between items-center">
-                <h1 className="text-base font-bold text-gray-800 px-2">
-                  Dispatch Stock
-                </h1>
-                <div className="flex gap-[2px]">
-                  <button
-                    className={` sm:w-auto ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor} text-sm p-3 rounded-b-md `}
-                    onClick={downloadExcel}
-                  >
-                    <RiFileExcel2Line className="h-3 w-3 " />
-                  </button>
-                  <button
-                    className={` sm:w-auto ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor} text-sm p-3 rounded-b-md `}
-                    onClick={handlePrintPdf}
-                  >
-                    <Printer className="h-3 w-3 " />
-                  </button>
-                </div>
-              </div>
-
-              {/* Form */}
-              <form
-                onSubmit={handleSubmit}
-                className="bg-white p-2 rounded-md shadow-xs"
-              >
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                  <div className="space-y-1">
-                    <Input
-                      type="date"
-                      value={formData.from_date}
-                      className="text-xs h-7"
-                      onChange={(e) => handleInputChange("from_date", e)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Input
-                      type="date"
-                      value={formData.to_date}
-                      className="text-xs h-7"
-                      onChange={(e) => handleInputChange("to_date", e)}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <MemoizedSelect
-                      value={formData.sale_buyer}
-                      onChange={(e) => handleInputChange("sale_buyer", e)}
-                      options={
-                        buyerData?.buyers?.map((buyer) => ({
-                          value: buyer.buyer_name,
-                          label: buyer.buyer_name,
-                        })) || []
-                      }
-                      placeholder="Select Buyer"
-                      className="text-xs h-7 flex-1"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className={`h-9 w-full ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-                    >
-                      <Search className="h-3 w-3 mr-1" /> Search
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop View (hidden sm:block) */}
-        <div className="hidden sm:block">
-          <div
-            className={`sticky top-0 z-10 border border-gray-200 rounded-lg ${ButtonConfig.cardheaderColor} shadow-sm p-3 mb-2`}
-          >
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-              <div className="lg:w-64 xl:w-72 shrink-0">
-                <h1 className="text-xl font-bold text-gray-800 truncate">
-                  Dispatch Stock
-                </h1>
-                <p className="text-md text-gray-500 truncate">
-                  View dispatch stock
-                </p>
-              </div>
-
-              <form
-                onSubmit={handleSubmit}
-                className="bg-white p-3 rounded-md shadow-xs  "
-              >
-                <div className="flex flex-col lg:flex-col lg:items-end gap-3  ">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 flex-1  items-center">
-                    <div className="space-y-1 ">
-                      <label
-                        className={`text-xs ${ButtonConfig.cardLabel} block`}
-                      >
-                        From Date
-                      </label>
-                      <Input
-                        type="date"
-                        value={formData.from_date}
-                        className="text-xs h-8 w-full"
-                        onChange={(e) => handleInputChange("from_date", e)}
-                      />
-                    </div>
-                    <div className="space-y-1 ">
-                      <label
-                        className={`text-xs ${ButtonConfig.cardLabel} block`}
-                      >
-                        To Date
-                      </label>
-                      <Input
-                        type="date"
-                        value={formData.to_date}
-                        className="text-xs h-8 w-full"
-                        onChange={(e) => handleInputChange("to_date", e)}
-                      />
-                    </div>
-                    <div className="space-y-1 ">
-                      <label
-                        className={`text-xs ${ButtonConfig.cardLabel} block`}
-                      >
-                        Buyer
-                      </label>
-                      <MemoizedSelect
-                        value={formData.sale_buyer}
-                        onChange={(e) => handleInputChange("sale_buyer", e)}
-                        options={
-                          buyerData?.buyers?.map((buyer) => ({
-                            value: buyer.buyer_name,
-                            label: buyer.buyer_name,
-                          })) || []
-                        }
-                        placeholder="Select Buyer"
-                        className="text-xs h-8 w-full"
-                      />
-                    </div>
-                    <div className="md:mt-5 flex space-x-3">
-                      <Button
-                        type="submit"
-                        size="sm"
-                        className={`h-8  ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-                      >
-                        <Search className="h-3 w-3 mr-1" />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={handlePrintPdf}
-                      >
-                        <Printer className="h-3 w-3 mr-1" />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={downloadExcel}
-                      >
-                        <RiFileExcel2Line className="h-3 w-3 mr-1" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <DispatchReportHeader
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          buyerData={buyerData}
+          downloadExcel={downloadExcel}
+          handlePrintPdf={handlePrintPdf}
+        />
 
         {renderContent()}
+
+        {/* Dialog for Item Details */}
+        <DispatchItemDetailsDialog
+          selectedRef={selectedRef}
+          setSelectedRef={setSelectedRef}
+          reportData={reportData}
+          isDoubleBranch={isDoubleBranch}
+          columnVisibility={columnVisibility}
+        />
       </div>
     </Page>
   );

@@ -37,7 +37,7 @@ const VersionCheck = () => {
       setShowUpdateDialog({
         showUpdateDialog: false,
         version: serverVersion,
-      })
+      }),
     );
   };
   const handleLogout = async () => {
@@ -60,7 +60,7 @@ const VersionCheck = () => {
           setShowUpdateDialog({
             showUpdateDialog: true,
             version: serverVersion,
-          })
+          }),
         );
         setRetryPopup(false);
       }, 5000);
