@@ -8,8 +8,9 @@ import versionReducer from "./versionSlice";
 import storage from "redux-persist/lib/storage";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import { persistReducer, persistStore } from "redux-persist";
+import ENV from "@/config/ENV";
 const encryptor = encryptTransform({
-  secretKey: import.meta.env.VITE_SECRET_KEY || "",
+  secretKey: ENV.SECRET_KEY || "",
   onError: (error) => console.error("Encryption Error:", error),
 });
 const persistConfig = {

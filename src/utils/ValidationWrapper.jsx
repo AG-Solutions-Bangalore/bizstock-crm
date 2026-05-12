@@ -1,6 +1,7 @@
 import { DOT_ENV, PANEL_CHECK } from "@/api";
 import apiClient from "@/api/axios";
 import usetoken from "@/api/usetoken";
+import ENV from "@/config/ENV";
 import { useToast } from "@/hooks/use-toast";
 import { logout } from "@/redux/authSlice";
 import { persistor } from "@/redux/store";
@@ -10,8 +11,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const secretKey = import.meta.env.VITE_SECRET_KEY;
-const validationKey = import.meta.env.VITE_SECRET_VALIDATION;
+const secretKey = ENV.SECRET_KEY;
+const validationKey = ENV.validationKey;
 
 const ValidationWrapper = ({ children }) => {
   const [status, setStatus] = useState("pending");
@@ -37,14 +38,14 @@ const ValidationWrapper = ({ children }) => {
             setShowUpdateDialog({
               showUpdateDialog: false,
               version: serverVer,
-            })
+            }),
           );
           if (localVersion !== serverVer) {
             dispatch(
               setShowUpdateDialog({
                 showUpdateDialog: true,
                 version: serverVer,
-              })
+              }),
             );
           }
         }
