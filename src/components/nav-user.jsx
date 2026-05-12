@@ -21,6 +21,7 @@ import useLogout from "@/hooks/useLogout";
 import { setShowUpdateDialog } from "@/redux/versionSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { formatLatestDate, DATE_PRESETS } from "@/utils/dateUtils";
 
 export function NavUser({ user }) {
   const [open, setOpen] = useState(false);
@@ -105,7 +106,7 @@ export function NavUser({ user }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on :30/03/2026
+                      Updated on : {formatLatestDate(new Date(), DATE_PRESETS.DISPLAY)}
                     </span>
                   </div>
                 </div>

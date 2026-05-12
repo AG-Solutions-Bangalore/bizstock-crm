@@ -3,19 +3,17 @@ import apiClient from "@/api/axios";
 import usetoken from "@/api/usetoken";
 import Page from "@/app/dashboard/page";
 import downloadExcel from "@/components/common/downloadExcel";
-import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
 import { getTodayDate } from "@/utils/currentDate";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import DispatchBarChart from "./DispatchBarChart";
 import StockTableBoth from "./StockTableBoth";
 import StockTableSection from "./StockTableSection";
-import { useSelector } from "react-redux";
 const tabs = [
   { value: "stock-view", label: "Stock View" },
   { value: "outofstock", label: "Out of Stock" },
@@ -89,7 +87,7 @@ const Home = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   };
@@ -114,8 +112,9 @@ const Home = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
+    console.log("Stock Report Response:", response.data);
     return response.data.stock;
   };
   const {
@@ -250,7 +249,7 @@ const Home = () => {
 
     const isDoubleBranch = singlebranch === "Yes" && doublebranch === "Yes";
     const hasPreBooking = filteredItems.some(
-      (item) => Number(item.pre_box) > 0 || Number(item.pre_piece) > 0
+      (item) => Number(item.pre_box) > 0 || Number(item.pre_piece) > 0,
     );
     if (columnVisibility.available_box) {
       if (isSingleBranchOnly) {
@@ -301,7 +300,7 @@ const Home = () => {
         row.push(
           Number(item.pre_box) > 0 || Number(item.pre_piece) > 0
             ? `${item.pre_box} / ${item.pre_piece}`
-            : ""
+            : "",
         );
       }
 
@@ -348,7 +347,7 @@ const Home = () => {
         "Minimum Box",
         "Minimum Piece",
         "Available Box",
-        "Available Piece"
+        "Available Piece",
       );
       showBoxPiece = true;
     }
