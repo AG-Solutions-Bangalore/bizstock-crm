@@ -55,8 +55,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import BuyerForm from "../master/buyer/CreateBuyer";
-import CreateItem from "../master/item/CreateItem";
+import BuyerForm from "@/features/master/components/buyer/BuyerFormDialog";
+import CreateItem from "@/features/master/components/item/ItemFormDialog";
 const InvoiceForm = () => {
   const { id } = useParams();
   const decryptedId = decryptId(id);

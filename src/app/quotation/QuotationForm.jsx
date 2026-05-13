@@ -55,8 +55,8 @@ import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import CreateItem from "../master/item/CreateItem";
-import BuyerForm from "../master/buyer/CreateBuyer";
+import CreateItem from "@/features/master/components/item/ItemFormDialog";
+import BuyerForm from "@/features/master/components/buyer/BuyerFormDialog";
 const QuotationForm = () => {
   const { id } = useParams();
   const decryptedId = decryptId(id);

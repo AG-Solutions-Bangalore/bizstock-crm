@@ -1,0 +1,248 @@
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from "@/components/ui/sidebar";
+import companyname from "@/json/company.json";
+import {
+  ArrowDown,
+  ArrowUp,
+  Frame,
+  Package,
+  ReceiptText,
+  Settings2
+} from "lucide-react";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { NavMain } from "./nav-main";
+import { NavMainUser } from "./nav-main-user";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
+export function AppSidebar({ ...props }) {
+  const nameL = useSelector((state) => state.auth.name);
+  const emailL = useSelector((state) => state.auth.email);
+  const id = useSelector((state) => state.auth.user_type);
+  const userbatch = useSelector((state) => state.auth?.branch_batch);
+  const initialData = {
+    user: {
+      name: `${nameL}`,
+      email: `${emailL}`,
+      avatar: "/avatars/shadcn.jpg",
+    },
+    teams: [
+      {
+        name: `${companyname?.CompanyName}`,
+      },
+      // {
+      //   name: `${companyname?.CompanyName}`,
+      //   logo: GalleryVerticalEnd,
+      //   plan: "",
+      // },
+    ],
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/home",
+        icon: Frame,
+        isActive: false,
+      },
+      ...(id != 1
+        ? [
+            {
+              title: "Master",
+              url: "#",
+              isActive: false,
+              icon: Settings2,
+              items: [
+                {
+                  title: "Category",
+                  url: "/master/category",
+                },
+                {
+                  title: "Item",
+                  url: "/master/item",
+                },
+                {
+                  title: "Buyer",
+                  url: "/master/buyer",
+                },
+                {
+                  title: "Godown",
+                  url: "/master/go-down",
+                },
+                ...(id == 3
+                  ? [
+                      {
+                        title: "Branch",
+                        url: "/master/branch",
+                      },
+                    ]
+                  : []),
+                ...(id == 3
+                  ? [
+                      {
+                        title: "Team",
+                        url: "/master/team",
+                      },
+                    ]
+                  : []),
+              ],
+            },
+          ]
+        : []),
+
+      {
+        title: "Inward",
+        url: "#",
+        isActive: false,
+        icon: ArrowDown,
+        items: [
+          {
+            title: "Purchase",
+            url: "/purchase",
+          },
+          {
+            title: "Purchase Return",
+            url: "/purchase-return",
+          },
+        ],
+      },
+      {
+        title: "Outward",
+        url: "#",
+        isActive: false,
+        icon: ArrowUp,
+        items: [
+          {
+            title: "Quotation",
+            url: "/quotation",
+          },
+
+          {
+            title: "PreBooking",
+            url: "/pre-booking",
+          },
+          {
+            title: "Dispatch",
+            url: "/dispatch",
+          },
+          {
+            title: "Dispatch Return",
+            url: "/dispatch-return",
+          },
+          ...(id != 1
+            ? [
+                {
+                  title: "Dispatch Summary",
+                  url: "/report/dispatch",
+                },
+              ]
+            : []),
+        ],
+      },
+      {
+        title: "Billing",
+        url: "#",
+        isActive: false,
+        icon: ReceiptText,
+        items: [
+          {
+            title: "Invoice",
+            url: "/invoice",
+          },
+          {
+            title: "Payment",
+            url: "/payment",
+          },
+          {
+            title: "Payment Summary",
+            url: "/report/payment-summary",
+          },
+          {
+            title: "Ledger",
+            url: "/report/payment-ledger",
+          },
+        ],
+      },
+
+      {
+        title: "Stock",
+        url: "#",
+        isActive: false,
+        icon: Package,
+
+        items: [
+          {
+            title: "Stock View",
+            url: "/stock-view",
+          },
+          ...(userbatch === "Yes"
+            ? [
+                {
+                  title: "Stock Batch View",
+                  url: "/stock-batch-view",
+                },
+              ]
+            : []),
+          {
+            title: "Category Stock",
+            url: "/report/category-stock",
+          },
+          {
+            title: "Stock Summary",
+            url: "/report/stock",
+          },
+          {
+            title: "Godown Stock",
+            url: "/report/godown-stock",
+          },
+
+          {
+            title: "Single Item Stock",
+            url: "/report/single-item-stock",
+          },
+          ...(id != 1
+            ? [
+                {
+                  title: "Buyer",
+                  url: "/report/buyer",
+                },
+              ]
+            : []),
+        ],
+      },
+    ],
+  };
+  const location = useLocation();
+
+  const getActiveLabel = () => {
+    const currentPath = location.pathname;
+    const activeItem = initialData.navMain.find((item) => {
+      if (item.url === currentPath) return true;
+      if (item.items) {
+        return item.items.some((subItem) => subItem.url === currentPath);
+      }
+      return false;
+    });
+    return activeItem ? activeItem.title : "Main Menu";
+  };
+
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <TeamSwitcher teams={initialData.teams} />
+      </SidebarHeader>
+      <SidebarContent className="sidebar-content">
+        {/* <NavProjects projects={data.projects} /> */}
+        <NavMain items={initialData.navMain} label={getActiveLabel()} />
+        <NavMainUser projects={initialData.userManagement} />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={initialData.user} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
