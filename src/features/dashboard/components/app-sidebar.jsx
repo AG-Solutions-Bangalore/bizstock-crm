@@ -15,6 +15,7 @@ import {
   Settings2
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { NavMain } from "./nav-main";
 import { NavMainUser } from "./nav-main-user";
 import { NavUser } from "./nav-user";
@@ -214,6 +215,19 @@ export function AppSidebar({ ...props }) {
       },
     ],
   };
+  const location = useLocation();
+
+  const getActiveLabel = () => {
+    const currentPath = location.pathname;
+    const activeItem = initialData.navMain.find((item) => {
+      if (item.url === currentPath) return true;
+      if (item.items) {
+        return item.items.some((subItem) => subItem.url === currentPath);
+      }
+      return false;
+    });
+    return activeItem ? activeItem.title : "Main Menu";
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -222,7 +236,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent className="sidebar-content">
         {/* <NavProjects projects={data.projects} /> */}
-        <NavMain items={initialData.navMain} />
+        <NavMain items={initialData.navMain} label={getActiveLabel()} />
         <NavMainUser projects={initialData.userManagement} />
       </SidebarContent>
       <SidebarFooter>
