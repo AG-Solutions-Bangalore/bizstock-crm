@@ -113,7 +113,7 @@ const CategoryPage = () => {
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+            <TableBody >
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>

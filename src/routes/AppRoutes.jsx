@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import StockView from "@/app/stockView/StockView";
+import StockView from "@/features/stock/pages/StockViewPage";
 
 import Login from "@/app/auth/Login";
 import ForgotPassword from "@/app/auth/ForgotPassword";
@@ -35,21 +35,21 @@ import PurchaseReturnList from "@/app/purchasereturn/PurchaseReturnList";
 import PurchaseReturnView from "@/app/purchasereturn/PurchaseReturnView";
 import QuotationForm from "@/app/quotation/QuotationForm";
 import QuotationList from "@/app/quotation/QuotationList";
-import BuyerReport from "@/app/report/BuyerReport";
-import CategoryStock from "@/app/report/CategoryStock/CategoryStock";
-import DispatchReport from "@/app/report/DispatchReport";
-import PurchaseReport from "@/app/report/PurchaseReport";
-import SingleItemStock from "@/app/report/SingleItemStock";
-import Stock from "@/app/report/Stock";
-import StockGoDown from "@/app/report/StockGoDown";
+import BuyerReport from "@/features/report/pages/BuyerReportPage";
+import CategoryStock from "@/features/report/pages/CategoryStockPage";
+import DispatchReport from "@/features/report/pages/DispatchReportPage";
+import PurchaseReport from "@/features/report/pages/PurchaseReportPage";
+import SingleItemStock from "@/features/report/pages/SingleItemStockPage";
+import Stock from "@/features/report/pages/OverallStockPage";
+import StockGoDown from "@/features/report/pages/GoDownStockPage";
 import ValidationWrapper from "@/utils/ValidationWrapper";
 import InvoiceList from "@/app/invoice/InvoiceList";
 import InvoiceForm from "@/app/invoice/InvoiceForm";
-import PaymentSummaryReport from "@/app/report/PaymentSummaryReport";
-import PaymentLedgerReport from "@/app/report/PaymentLedgerReport";
+import PaymentSummaryReport from "@/features/report/pages/PaymentSummaryPage";
+import PaymentLedgerReport from "@/features/report/pages/PaymentLedgerPage";
 import PaymentList from "@/app/payment/PaymentList";
 import Signup from "@/app/auth/Signup";
-import StockBatchView from "@/app/stockbatch/stock-batch";
+import StockBatchView from "@/features/stock/pages/StockBatchPage";
 
 function AppRoutes() {
   return (
@@ -72,6 +72,7 @@ function AppRoutes() {
           <Route path="/master/go-down" element={<GoDownList />} />
           <Route path="/stock-batch-view" element={<StockBatchView />} />
           <Route path="/stock-view" element={<StockView />} />
+
           <Route path="/purchase" element={<PurchaseList />} />
           <Route path="/purchase/create" element={<CreatePurchase />} />
           <Route path="/purchase/edit/:id" element={<CreatePurchase />} />
@@ -121,6 +122,7 @@ function AppRoutes() {
           <Route path="/payment" element={<PaymentList />} />
           <Route path="/payment/form" element={<PaymentForm />} />
           <Route path="/payment/form/:id" element={<PaymentForm />} />
+
           <Route path="/report/stock" element={<Stock />} />
           <Route path="/report/buyer" element={<BuyerReport />} />
           <Route
