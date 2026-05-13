@@ -1,28 +1,24 @@
 import {
-  ArrowDown,
-  ArrowUp,
-  Box,
-  DollarSign,
-  File,
-  Frame,
-  Package,
-  ReceiptText,
-  Settings2,
-  ShoppingBag,
-} from "lucide-react";
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import companyname from "@/json/company.json";
+import {
+  ArrowDown,
+  ArrowUp,
+  Frame,
+  Package,
+  ReceiptText,
+  Settings2
+} from "lucide-react";
 import { useSelector } from "react-redux";
-import companyname from "../json/company.json";
+import { NavMain } from "./nav-main";
 import { NavMainUser } from "./nav-main-user";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 export function AppSidebar({ ...props }) {
   const nameL = useSelector((state) => state.auth.name);
   const emailL = useSelector((state) => state.auth.email);

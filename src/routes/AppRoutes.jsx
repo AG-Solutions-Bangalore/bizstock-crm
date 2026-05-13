@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import StockView from "@/app/stockView/StockView";
 
 import Login from "@/app/auth/Login";
-import ForgotPassword from "@/components/ForgotPassword/ForgotPassword";
+import ForgotPassword from "@/app/auth/ForgotPassword";
 import Maintenance from "@/components/common/Maintenance";
 import AuthRoute from "./AuthRoute";
 import ProtectedRoute from "./ProtectedRoute";

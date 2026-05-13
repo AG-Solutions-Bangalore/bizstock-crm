@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import Page from "../dashboard/page";
-import StockTableSection from "../home/StockTableSection";
+import StockTableSection from "@/features/home/components/StockTableSection";
 
 const StockView = () => {
   const containerRef = useRef();
