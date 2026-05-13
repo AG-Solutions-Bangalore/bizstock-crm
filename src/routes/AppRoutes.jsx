@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 
 import StockView from "@/features/stock/pages/StockViewPage";
 
-import Login from "@/app/auth/Login";
 import ForgotPassword from "@/app/auth/ForgotPassword";
+import Login from "@/app/auth/Login";
 import Maintenance from "@/components/common/Maintenance";
 import AuthRoute from "./AuthRoute";
 import ProtectedRoute from "./ProtectedRoute";
@@ -24,6 +24,10 @@ import ItemList from "@/app/master/item/ItemList";
 import TeamList from "@/app/master/team/TeamList";
 import PaymentForm from "@/app/payment/PaymentForm";
 
+import Signup from "@/app/auth/Signup";
+import InvoiceForm from "@/app/invoice/InvoiceForm";
+import InvoiceList from "@/app/invoice/InvoiceList";
+import PaymentList from "@/app/payment/PaymentList";
 import PreBookingForm from "@/app/prebooking/PreBookingForm";
 import PreBookingList from "@/app/prebooking/PreBookingList";
 import PreBookingView from "@/app/prebooking/PreBookingView";
@@ -38,30 +42,29 @@ import QuotationList from "@/app/quotation/QuotationList";
 import BuyerReport from "@/features/report/pages/BuyerReportPage";
 import CategoryStock from "@/features/report/pages/CategoryStockPage";
 import DispatchReport from "@/features/report/pages/DispatchReportPage";
+import StockGoDown from "@/features/report/pages/GoDownStockPage";
+import Stock from "@/features/report/pages/OverallStockPage";
+import PaymentLedgerReport from "@/features/report/pages/PaymentLedgerPage";
+import PaymentSummaryReport from "@/features/report/pages/PaymentSummaryPage";
 import PurchaseReport from "@/features/report/pages/PurchaseReportPage";
 import SingleItemStock from "@/features/report/pages/SingleItemStockPage";
-import Stock from "@/features/report/pages/OverallStockPage";
-import StockGoDown from "@/features/report/pages/GoDownStockPage";
-import ValidationWrapper from "@/utils/ValidationWrapper";
-import InvoiceList from "@/app/invoice/InvoiceList";
-import InvoiceForm from "@/app/invoice/InvoiceForm";
-import PaymentSummaryReport from "@/features/report/pages/PaymentSummaryPage";
-import PaymentLedgerReport from "@/features/report/pages/PaymentLedgerPage";
-import PaymentList from "@/app/payment/PaymentList";
-import Signup from "@/app/auth/Signup";
 import StockBatchView from "@/features/stock/pages/StockBatchPage";
+import ValidationWrapper from "@/utils/ValidationWrapper";
 
 function AppRoutes() {
   return (
     <ValidationWrapper>
       <Routes>
+        {/* Done 4 layers done */}
         <Route path="/" element={<AuthRoute />}>
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/signup" element={<Signup />} />
         </Route>
+        {/*  */}
 
+        {/* Done 4 layers done */}
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
           <Route path="/master/buyer" element={<BuyerList />} />
@@ -72,6 +75,7 @@ function AppRoutes() {
           <Route path="/master/go-down" element={<GoDownList />} />
           <Route path="/stock-batch-view" element={<StockBatchView />} />
           <Route path="/stock-view" element={<StockView />} />
+          {/*  */}
 
           <Route path="/purchase" element={<PurchaseList />} />
           <Route path="/purchase/create" element={<CreatePurchase />} />
@@ -123,6 +127,7 @@ function AppRoutes() {
           <Route path="/payment/form" element={<PaymentForm />} />
           <Route path="/payment/form/:id" element={<PaymentForm />} />
 
+          {/* 4 layers done */}
           <Route path="/report/stock" element={<Stock />} />
           <Route path="/report/buyer" element={<BuyerReport />} />
           <Route
@@ -142,7 +147,7 @@ function AppRoutes() {
           <Route path="/report/purchase" element={<PurchaseReport />} />
           <Route path="/report/dispatch" element={<DispatchReport />} />
         </Route>
-
+        {/*  */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ValidationWrapper>
