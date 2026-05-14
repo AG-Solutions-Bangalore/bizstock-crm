@@ -1,4 +1,3 @@
-import Page from "@/app/dashboard/page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -49,18 +48,15 @@ const HomePage = () => {
 
   if (isErrorStock) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Home</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetchStock()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Home</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetchStock()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="w-full p-0 md:p-4 sm:grid grid-cols-1">
+    <div className="w-full p-0 md:p-4 sm:grid grid-cols-1">
         <Tabs defaultValue="stock-view" className="sm:hidden">
           <TabsList className="grid w-full grid-cols-3">
             {TABS.map((tab) => (
@@ -158,7 +154,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-    </Page>
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Page from "@/app/dashboard/page";
 import { Card, CardContent } from "@/components/ui/card";
 import Loader from "@/components/loader/Loader";
 import moment from "moment";
@@ -103,17 +102,14 @@ const StockBatchPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <div className="p-4 text-center text-destructive font-bold">
-          Error loading stock batch data. Please try again.
-        </div>
-      </Page>
+      <div className="p-4 text-center text-destructive font-bold">
+        Error loading stock batch data. Please try again.
+      </div>
     );
   }
 
   return (
-    <Page>
-      <div className="p-0 md:p-4">
+    <div className="p-0 md:p-4">
         <StockBatchFilters 
           formData={formData}
           handleInputChange={handleInputChange}
@@ -138,8 +134,7 @@ const StockBatchPage = () => {
             formData={formData}
           />
         )}
-      </div>
-    </Page>
+    </div>
   );
 };
 

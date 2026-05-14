@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import Page from "@/app/dashboard/page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
@@ -156,20 +155,17 @@ const StockViewPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
-          <CardContent>
-            <Button onClick={() => refetch()} variant="outline">Try Again</Button>
-          </CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
+        <CardContent>
+          <Button onClick={() => refetch()} variant="outline">Try Again</Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <Card className="shadow-sm border-0">
+    <Card className="shadow-sm border-0">
         <CardContent className="p-2">
           <StockTable
             title="Stock View"
@@ -190,8 +186,7 @@ const StockViewPage = () => {
             loading={isFetching}
           />
         </CardContent>
-      </Card>
-    </Page>
+    </Card>
   );
 };
 

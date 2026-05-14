@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -129,18 +128,15 @@ const OverallStockPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
         <OverallStockFilters
           formData={formData}
           handleInputChange={handleInputChange}
@@ -175,7 +171,6 @@ const OverallStockPage = () => {
           </div>
         )}
       </div>
-    </Page>
   );
 };
 

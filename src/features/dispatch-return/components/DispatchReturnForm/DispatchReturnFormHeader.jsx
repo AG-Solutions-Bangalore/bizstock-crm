@@ -1,0 +1,90 @@
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { MemoizedSelect } from "@/components/common/MemoizedSelect";
+import BuyerForm from "@/features/master/components/buyer/BuyerFormDialog";
+
+export const DispatchReturnFormHeader = ({ 
+  formData, 
+  handleInputChange, 
+  buyerData, 
+  dispatchRef, 
+  editId 
+}) => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Date<span className="text-red-500">*</span></label>
+        <Input
+          type="date"
+          value={formData.dispatch_date}
+          onChange={(e) => handleInputChange(e, "dispatch_date")}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">Buyer<span className="text-red-500">*</span></label>
+          {!editId && <BuyerForm />}
+        </div>
+        <MemoizedSelect
+          value={formData.dispatch_buyer_id}
+          onChange={(e) => handleInputChange(e, "dispatch_buyer_id")}
+          options={
+            buyerData?.buyers
+              ?.filter((buyer) => buyer.buyer_type?.split(",").includes("1"))
+              .map((buyer) => ({
+                value: buyer.id,
+                label: buyer.buyer_name,
+              })) || []
+          }
+          placeholder="Select Buyer"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Ref No<span className="text-red-500">*</span></label>
+        {editId ? (
+          <Input value={formData.dispatch_ref_no} disabled />
+        ) : (
+          <MemoizedSelect
+            value={formData.dispatch_ref_no}
+            onChange={(e) => handleInputChange(e, "dispatch_ref_no")}
+            options={
+              dispatchRef ? [{ value: dispatchRef.dispatch_ref, label: dispatchRef.dispatch_ref }] : []
+            }
+            placeholder="Select Ref"
+          />
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Vehicle No</label>
+        <Input
+          value={formData.dispatch_vehicle_no}
+          onChange={(e) => handleInputChange(e, "dispatch_vehicle_no")}
+          placeholder="Vehicle No"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">City</label>
+        <Input
+          value={formData.dispatch_buyer_city}
+          onChange={(e) => handleInputChange(e, "dispatch_buyer_city")}
+          placeholder="City"
+        />
+      </div>
+
+      <div className="md:col-span-3 space-y-2">
+        <label className="text-sm font-medium">Remark</label>
+        <Textarea
+          value={formData.dispatch_remark}
+          onChange={(e) => handleInputChange(e, "dispatch_remark")}
+          placeholder="Add any notes here"
+          rows={2}
+        />
+      </div>
+    </div>
+  );
+};

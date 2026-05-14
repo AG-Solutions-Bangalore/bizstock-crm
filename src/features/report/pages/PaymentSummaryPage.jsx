@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-import Page from "@/app/dashboard/page";
 import { usePaymentSummaryReport } from "../hooks/useReport";
 import PaymentSummaryFilters from "../components/PaymentSummaryFilters";
 import PaymentSummaryTable from "../components/PaymentSummaryTable";
@@ -38,18 +37,15 @@ const PaymentSummaryPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Summary</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Summary</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
         <PaymentSummaryFilters
           formData={formData}
           handleInputChange={handleInputChange}
@@ -73,7 +69,6 @@ const PaymentSummaryPage = () => {
           </div>
         )}
       </div>
-    </Page>
   );
 };
 

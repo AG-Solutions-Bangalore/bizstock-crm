@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-import Page from "@/app/dashboard/page";
 import { useFetchBuyers } from "@/hooks/useApi";
 import { usePaymentLedgerReport } from "../hooks/useReport";
 import PaymentLedgerFilters from "../components/PaymentLedgerFilters";
@@ -47,18 +46,15 @@ const PaymentLedgerPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Ledger</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Ledger</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
         <PaymentLedgerFilters
           formData={formData}
           handleInputChange={handleInputChange}
@@ -84,7 +80,7 @@ const PaymentLedgerPage = () => {
           </div>
         )}
       </div>
-    </Page>
+
   );
 };
 

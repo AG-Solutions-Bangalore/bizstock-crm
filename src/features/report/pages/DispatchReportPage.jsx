@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
 import ExcelJS from "exceljs";
-import Page from "@/app/dashboard/page";
 import { useToast } from "@/hooks/use-toast";
 import { useFetchBuyers } from "@/hooks/useApi";
 import { useDispatchReport } from "../hooks/useReport";
@@ -154,18 +153,15 @@ const DispatchReportPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Dispatch Data</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Dispatch Data</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
         <DispatchReportFilters
           formData={formData}
           handleInputChange={handleInputChange}
@@ -218,7 +214,6 @@ const DispatchReportPage = () => {
           columnVisibility={columnVisibility}
         />
       </div>
-    </Page>
   );
 };
 
