@@ -8,12 +8,8 @@ import Maintenance from "@/components/common/Maintenance";
 import AuthRoute from "./AuthRoute";
 import ProtectedRoute from "./ProtectedRoute";
 
-import CreateDispatch from "@/app/dispatch/CreateDispatch";
-import DispatchList from "@/app/dispatch/DispatchList";
-import DispatchView from "@/app/dispatch/DispatchView";
-import CreateDispatchReturnForm from "@/app/dispatchreturn/CreateDispatchReturnForm";
-import DispatchReturnList from "@/app/dispatchreturn/DispatchReturnList";
-import DispatchReturnView from "@/app/dispatchreturn/DispatchReturnView";
+import { CreateDispatchPage, DispatchListPage, DispatchViewPage } from "@/features/dispatch";
+import { CreateDispatchReturnPage, DispatchReturnListPage, DispatchReturnViewPage } from "@/features/dispatch-return";
 import NotFound from "@/app/errors/NotFound";
 import Home from "@/app/home/Home";
 import BranchList from "@/app/master/branch/BranchList";
@@ -88,33 +84,39 @@ function AppRoutes() {
             element={<PurchaseReturnViewPage />}
           />
 
-          
-          {/*  */}
 
-          
+
+
+
           <Route path="/pre-booking" element={<PreBookingListPage />} />
           <Route path="/pre-booking/create" element={<PreBookingFormPage />} />
           <Route path="/pre-booking/edit/:id" element={<PreBookingFormPage />} />
           <Route path="/pre-booking/view/:id" element={<PreBookingViewPage />} />
 
-          <Route path="/dispatch" element={<DispatchList />} />
-          <Route path="/dispatch/create" element={<CreateDispatch />} />
-          <Route path="/dispatch/edit/:id" element={<CreateDispatch />} />
-          <Route path="/dispatch/view/:id" element={<DispatchView />} />
 
-          <Route path="/dispatch-return" element={<DispatchReturnList />} />
+
+          <Route path="/dispatch" element={<DispatchListPage />} />
+          <Route path="/dispatch/create" element={<CreateDispatchPage />} />
+          <Route path="/dispatch/edit/:id" element={<CreateDispatchPage />} />
+          <Route path="/dispatch/view/:id" element={<DispatchViewPage />} />
+
+          <Route path="/dispatch-return" element={<DispatchReturnListPage />} />
           <Route
             path="/dispatch-return/create"
-            element={<CreateDispatchReturnForm />}
+            element={<CreateDispatchReturnPage />}
           />
           <Route
             path="/dispatch-return/edit/:id"
-            element={<CreateDispatchReturnForm />}
+            element={<CreateDispatchReturnPage />}
           />
           <Route
             path="/dispatch-return/view/:id"
-            element={<DispatchReturnView />}
+            element={<DispatchReturnViewPage />}
           />
+
+
+          {/*  */}
+
           <Route path="/invoice" element={<InvoiceList />} />
           <Route path="/invoice-form" element={<InvoiceForm />} />
           <Route path="/invoice-form/:id" element={<InvoiceForm />} />
