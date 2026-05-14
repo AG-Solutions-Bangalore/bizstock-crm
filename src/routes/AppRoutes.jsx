@@ -28,15 +28,9 @@ import Signup from "@/app/auth/Signup";
 import InvoiceForm from "@/app/invoice/InvoiceForm";
 import InvoiceList from "@/app/invoice/InvoiceList";
 import PaymentList from "@/app/payment/PaymentList";
-import PreBookingForm from "@/app/prebooking/PreBookingForm";
-import PreBookingList from "@/app/prebooking/PreBookingList";
-import PreBookingView from "@/app/prebooking/PreBookingView";
-import CreatePurchase from "@/app/purchase/CreatePurchase";
-import PurchaseList from "@/app/purchase/PurchaseList";
-import PurchaseView from "@/app/purchase/PurchaseView";
-import CreatePurchaseReturn from "@/app/purchasereturn/CreatePurchaseReturn";
-import PurchaseReturnList from "@/app/purchasereturn/PurchaseReturnList";
-import PurchaseReturnView from "@/app/purchasereturn/PurchaseReturnView";
+import { PreBookingFormPage, PreBookingListPage, PreBookingViewPage } from "@/features/pre-booking";
+import { CreatePurchasePage, PurchaseListPage, PurchaseViewPage } from "@/features/purchase";
+import { CreatePurchaseReturnPage, PurchaseReturnListPage, PurchaseReturnViewPage } from "@/features/purchase-return";
 import QuotationForm from "@/app/quotation/QuotationForm";
 import QuotationList from "@/app/quotation/QuotationList";
 import BuyerReport from "@/features/report/pages/BuyerReportPage";
@@ -75,29 +69,33 @@ function AppRoutes() {
           <Route path="/master/go-down" element={<GoDownList />} />
           <Route path="/stock-batch-view" element={<StockBatchView />} />
           <Route path="/stock-view" element={<StockView />} />
-          {/*  */}
 
-          <Route path="/purchase" element={<PurchaseList />} />
-          <Route path="/purchase/create" element={<CreatePurchase />} />
-          <Route path="/purchase/edit/:id" element={<CreatePurchase />} />
-          <Route path="/purchase/view/:id" element={<PurchaseView />} />
-          <Route path="/purchase-return" element={<PurchaseReturnList />} />
+          <Route path="/purchase" element={<PurchaseListPage />} />
+          <Route path="/purchase/create" element={<CreatePurchasePage />} />
+          <Route path="/purchase/edit/:id" element={<CreatePurchasePage />} />
+          <Route path="/purchase/view/:id" element={<PurchaseViewPage />} />
+          <Route path="/purchase-return" element={<PurchaseReturnListPage />} />
           <Route
             path="/purchase-return/create"
-            element={<CreatePurchaseReturn />}
+            element={<CreatePurchaseReturnPage />}
           />
           <Route
             path="/purchase-return/edit/:id"
-            element={<CreatePurchaseReturn />}
+            element={<CreatePurchaseReturnPage />}
           />
           <Route
             path="/purchase-return/view/:id"
-            element={<PurchaseReturnView />}
+            element={<PurchaseReturnViewPage />}
           />
-          <Route path="/pre-booking" element={<PreBookingList />} />
-          <Route path="/pre-booking/create" element={<PreBookingForm />} />
-          <Route path="/pre-booking/edit/:id" element={<PreBookingForm />} />
-          <Route path="/pre-booking/view/:id" element={<PreBookingView />} />
+
+          
+          {/*  */}
+
+          
+          <Route path="/pre-booking" element={<PreBookingListPage />} />
+          <Route path="/pre-booking/create" element={<PreBookingFormPage />} />
+          <Route path="/pre-booking/edit/:id" element={<PreBookingFormPage />} />
+          <Route path="/pre-booking/view/:id" element={<PreBookingViewPage />} />
 
           <Route path="/dispatch" element={<DispatchList />} />
           <Route path="/dispatch/create" element={<CreateDispatch />} />
