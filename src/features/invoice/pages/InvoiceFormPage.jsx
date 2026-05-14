@@ -1,6 +1,5 @@
 import { fetchDispatchInvoiceSubById } from "@/api";
 import usetoken from "@/api/usetoken";
-import Page from "@/app/dashboard/page";
 import { decryptId } from "@/components/common/Encryption";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -205,10 +204,10 @@ const InvoiceFormPage = () => {
     }
   };
 
-  if (isFetching) return <Page><div className="flex justify-center items-center h-full"><Loader2 className="animate-spin" /></div></Page>;
+  if (isFetching) return <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin" /></div>;
 
   return (
-    <Page>
+    <div className="w-full">
       <div className="flex items-center gap-4 mb-6 p-4">
         <Button variant="ghost" size="icon" onClick={() => navigate("/invoice")}>
           <ArrowLeft className="h-5 w-5" />
@@ -259,7 +258,7 @@ const InvoiceFormPage = () => {
           token={token}
         />
       </div>
-    </Page>
+    </div>
   );
 };
 

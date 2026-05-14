@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,16 +36,19 @@ import { ButtonConfig } from "@/config/ButtonConfig";
 import StatusToggle from "@/components/toggle/StatusToggle";
 import usetoken from "@/api/usetoken";
 import { useQueryClient } from "@tanstack/react-query";
-import { 
-  fetchDispatchById, 
-  navigateTODispatchEdit, 
-  navigateTODispatchView 
+import {
+  fetchDispatchById,
+  navigateTODispatchEdit,
+  navigateTODispatchView,
 } from "@/api";
 
 import { useDispatch } from "@/features/dispatch/hooks/useDispatch";
 import { DispatchTable } from "@/features/dispatch/components/DispatchList/DispatchTable";
 import { DispatchMobileList } from "@/features/dispatch/components/DispatchList/DispatchMobileList";
-import { DispatchActions, handleSendWhatsApp } from "@/features/dispatch/components/DispatchList/DispatchActions";
+import {
+  DispatchActions,
+  handleSendWhatsApp,
+} from "@/features/dispatch/components/DispatchList/DispatchActions";
 
 const DispatchListPage = () => {
   const navigate = useNavigate();
@@ -92,70 +94,79 @@ const DispatchListPage = () => {
     }
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: "index",
-      header: "Sl No",
-      cell: ({ row }) => <div>{row.index + 1}</div>,
-    },
-    {
-      accessorKey: "dispatch_date",
-      header: "Date",
-      id: "Date",
-      cell: ({ row }) => moment(row.original.dispatch_date).format("DD-MMM-YYYY"),
-    },
-    {
-      accessorKey: "buyer_name",
-      header: "Buyer Name",
-      id: "Buyer Name",
-    },
-    {
-      accessorKey: "dispatch_ref_no",
-      header: "Ref No",
-      id: "Ref No",
-    },
-    {
-      accessorKey: "dispatch_vehicle_no",
-      header: "Vehicle No",
-      id: "Vehicle No",
-    },
-    ...(userId == 3
-      ? [{
-          accessorKey: "branch_name",
-          header: "Branch Name",
-        }]
-      : []),
-    {
-      accessorKey: "dispatch_status",
-      header: "Status",
-      cell: ({ row }) => (
-        <StatusToggle
-          initialStatus={row.original.dispatch_status}
-          teamId={row.original.id}
-          onStatusChange={refetch}
-        />
-      ),
-    },
-    {
-      id: "actions",
-      header: "Action",
-      cell: ({ row }) => (
-        <DispatchActions 
-          dispatchId={row.original.id} 
-          userId={userId} 
-          onDelete={handleDeleteRow}
-          onWhatsApp={onWhatsApp}
-        />
-      ),
-    },
-  ], [userId, refetch]);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "index",
+        header: "Sl No",
+        cell: ({ row }) => <div>{row.index + 1}</div>,
+      },
+      {
+        accessorKey: "dispatch_date",
+        header: "Date",
+        id: "Date",
+        cell: ({ row }) =>
+          moment(row.original.dispatch_date).format("DD-MMM-YYYY"),
+      },
+      {
+        accessorKey: "buyer_name",
+        header: "Buyer Name",
+        id: "Buyer Name",
+      },
+      {
+        accessorKey: "dispatch_ref_no",
+        header: "Ref No",
+        id: "Ref No",
+      },
+      {
+        accessorKey: "dispatch_vehicle_no",
+        header: "Vehicle No",
+        id: "Vehicle No",
+      },
+      ...(userId == 3
+        ? [
+            {
+              accessorKey: "branch_name",
+              header: "Branch Name",
+            },
+          ]
+        : []),
+      {
+        accessorKey: "dispatch_status",
+        header: "Status",
+        cell: ({ row }) => (
+          <StatusToggle
+            initialStatus={row.original.dispatch_status}
+            teamId={row.original.id}
+            onStatusChange={refetch}
+          />
+        ),
+      },
+      {
+        id: "actions",
+        header: "Action",
+        cell: ({ row }) => (
+          <DispatchActions
+            dispatchId={row.original.id}
+            userId={userId}
+            onDelete={handleDeleteRow}
+            onWhatsApp={onWhatsApp}
+          />
+        ),
+      },
+    ],
+    [userId, refetch],
+  );
 
   const filteredData = useMemo(() => {
     if (!dispatch) return [];
-    return dispatch.filter(item => {
-      const matchesSearch = item.buyer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.dispatch_ref_no?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesDate = !selectedDate || moment(item.dispatch_date).format("YYYY-MM-DD") === selectedDate;
+    return dispatch.filter((item) => {
+      const matchesSearch =
+        item.buyer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.dispatch_ref_no?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesDate =
+        !selectedDate ||
+        moment(item.dispatch_date).format("YYYY-MM-DD") === selectedDate;
       return matchesSearch && matchesDate;
     });
   }, [dispatch, searchQuery, selectedDate]);
@@ -186,130 +197,133 @@ const DispatchListPage = () => {
 
   if (isLoading) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full">
-          <Loader />
-        </div>
-      </Page>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader>
-            <CardTitle className="text-destructive">Error Fetching Dispatch</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => refetch()} variant="outline">Try Again</Button>
-          </CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader>
+          <CardTitle className="text-destructive">
+            Error Fetching Dispatch
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={() => refetch()} variant="outline">
+            Try Again
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="w-full p-0 md:p-4 grid grid-cols-1">
-        <div className="hidden sm:block">
-          <div className="flex text-left text-2xl text-gray-800 font-[400] mb-4">Dispatch List</div>
-
-          <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
-            <div className="relative w-full md:w-72">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search dispatch..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
-              />
-            </div>
-            <Input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full md:w-48 bg-gray-50 border-gray-200"
-            />
-
-            <div className="flex flex-col md:flex-row md:ml-auto gap-2 w-full md:w-auto">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    Columns <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {table.getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {userId != 3 && (
-                <Button
-                  variant="default"
-                  className={`ml-2 ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-                  onClick={() => navigate("/dispatch/create")}
-                >
-                  <SquarePlus className="h-4 w-4 mr-2" /> Dispatch
-                </Button>
-              )}
-            </div>
-          </div>
-
-          <DispatchTable table={table} />
+    <div className="w-full p-0 md:p-4 grid grid-cols-1">
+      <div className="hidden sm:block">
+        <div className="flex text-left text-2xl text-gray-800 font-[400] mb-4">
+          Dispatch List
         </div>
 
-        <div className="sm:hidden p-4">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-medium text-gray-800">Dispatch List</h1>
+        <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search dispatch..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
+            />
+          </div>
+          <Input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-full md:w-48 bg-gray-50 border-gray-200"
+          />
+
+          <div className="flex flex-col md:flex-row md:ml-auto gap-2 w-full md:w-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full md:w-auto">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {userId != 3 && (
               <Button
                 variant="default"
-                className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
+                className={`ml-2 ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
                 onClick={() => navigate("/dispatch/create")}
               >
-                <SquarePlus className="h-4 w-4" /> Dispatch
+                <SquarePlus className="h-4 w-4 mr-2" /> Dispatch
               </Button>
             )}
           </div>
+        </div>
 
-          <div className="flex flex-col gap-2 mb-4">
-            <div className="relative w-full">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search dispatch..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 w-full"
-              />
-            </div>
+        <DispatchTable table={table} />
+      </div>
+
+      <div className="sm:hidden p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-medium text-gray-800">Dispatch List</h1>
+          {userId != 3 && (
+            <Button
+              variant="default"
+              className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
+              onClick={() => navigate("/dispatch/create")}
+            >
+              <SquarePlus className="h-4 w-4" /> Dispatch
+            </Button>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2 mb-4">
+          <div className="relative w-full">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
             <Input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full"
+              placeholder="Search dispatch..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 w-full"
             />
           </div>
-
-          <DispatchMobileList 
-            items={filteredData} 
-            userId={userId}
-            onEdit={(id) => navigateTODispatchEdit(navigate, id)}
-            onView={(id) => navigateTODispatchView(navigate, id)}
-            onWhatsApp={onWhatsApp}
-            onStatusChange={refetch}
+          <Input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-full"
           />
         </div>
+
+        <DispatchMobileList
+          items={filteredData}
+          userId={userId}
+          onEdit={(id) => navigateTODispatchEdit(navigate, id)}
+          onView={(id) => navigateTODispatchView(navigate, id)}
+          onWhatsApp={onWhatsApp}
+          onStatusChange={refetch}
+        />
       </div>
 
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
@@ -317,18 +331,22 @@ const DispatchListPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the dispatch record.
+              This action cannot be undone. This will permanently delete the
+              dispatch record.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -274,15 +273,12 @@ const CreatePurchaseReturnPage = () => {
 
   if (isFetching || loadingbuyer || loadingitem || loadinggodown || loadingref) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full"><Loader /></div>
-      </Page>
+      <div className="flex justify-center items-center h-full"><Loader /></div>
     );
   }
 
   return (
-    <Page>
-      <div className="p-0 md:p-4">
+    <div className="p-0 md:p-4">
         <div className="flex items-center mb-6">
           <Button variant="ghost" size="icon" onClick={() => navigate("/purchase-return")} className="mr-2">
             <ArrowLeft className="h-5 w-5" />
@@ -291,7 +287,7 @@ const CreatePurchaseReturnPage = () => {
             <h1 className="text-2xl font-bold">{editId ? "Edit Purchase Return" : "Create Purchase Return"}</h1>
             <p className="text-sm text-gray-500">Manage your purchase return records</p>
           </div>
-        </div>
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -366,7 +362,7 @@ const CreatePurchaseReturnPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +40,10 @@ import usetoken from "@/api/usetoken";
 import { usePurchase } from "@/features/purchase/hooks/usePurchase";
 import { PurchaseTable } from "@/features/purchase/components/PurchaseList/PurchaseTable";
 import { PurchaseMobileList } from "@/features/purchase/components/PurchaseList/PurchaseMobileList";
-import { PurchaseActions, handleSendWhatsApp } from "@/features/purchase/components/PurchaseList/PurchaseActions";
+import {
+  PurchaseActions,
+  handleSendWhatsApp,
+} from "@/features/purchase/components/PurchaseList/PurchaseActions";
 
 const PurchaseListPage = () => {
   const navigate = useNavigate();
@@ -86,63 +88,69 @@ const PurchaseListPage = () => {
     }
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: "index",
-      header: "Sl No",
-      cell: ({ row }) => <div>{row.index + 1}</div>,
-    },
-    {
-      accessorKey: "purchase_date",
-      header: "Date",
-      id: "Date",
-      cell: ({ row }) => moment(row.original.purchase_date).format("DD-MMM-YYYY"),
-    },
-    {
-      accessorKey: "buyer_name",
-      header: "Buyer Name",
-      id: "Buyer Name",
-    },
-    {
-      accessorKey: "purchase_ref_no",
-      header: "Ref No",
-      id: "Ref No",
-    },
-    {
-      accessorKey: "purchase_vehicle_no",
-      header: "Vehicle No",
-      id: "Vehicle No",
-    },
-    ...(userId == 3
-      ? [{
-          accessorKey: "branch_name",
-          header: "Branch Name",
-        }]
-      : []),
-    {
-      accessorKey: "purchase_status",
-      header: "Status",
-      cell: ({ row }) => (
-        <StatusToggle
-          initialStatus={row.original.purchase_status}
-          teamId={row.original.id}
-          onStatusChange={refetch}
-        />
-      ),
-    },
-    {
-      id: "actions",
-      header: "Action",
-      cell: ({ row }) => (
-        <PurchaseActions 
-          purchaseId={row.original.id} 
-          userId={userId} 
-          onDelete={handleDeleteRow}
-          onWhatsApp={onWhatsApp}
-        />
-      ),
-    },
-  ], [userId, refetch]);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "index",
+        header: "Sl No",
+        cell: ({ row }) => <div>{row.index + 1}</div>,
+      },
+      {
+        accessorKey: "purchase_date",
+        header: "Date",
+        id: "Date",
+        cell: ({ row }) =>
+          moment(row.original.purchase_date).format("DD-MMM-YYYY"),
+      },
+      {
+        accessorKey: "buyer_name",
+        header: "Buyer Name",
+        id: "Buyer Name",
+      },
+      {
+        accessorKey: "purchase_ref_no",
+        header: "Ref No",
+        id: "Ref No",
+      },
+      {
+        accessorKey: "purchase_vehicle_no",
+        header: "Vehicle No",
+        id: "Vehicle No",
+      },
+      ...(userId == 3
+        ? [
+            {
+              accessorKey: "branch_name",
+              header: "Branch Name",
+            },
+          ]
+        : []),
+      {
+        accessorKey: "purchase_status",
+        header: "Status",
+        cell: ({ row }) => (
+          <StatusToggle
+            initialStatus={row.original.purchase_status}
+            teamId={row.original.id}
+            onStatusChange={refetch}
+          />
+        ),
+      },
+      {
+        id: "actions",
+        header: "Action",
+        cell: ({ row }) => (
+          <PurchaseActions
+            purchaseId={row.original.id}
+            userId={userId}
+            onDelete={handleDeleteRow}
+            onWhatsApp={onWhatsApp}
+          />
+        ),
+      },
+    ],
+    [userId, refetch],
+  );
 
   const table = useReactTable({
     data: purchase || [],
@@ -170,53 +178,56 @@ const PurchaseListPage = () => {
     },
   });
 
-  const filteredItems = useMemo(() => 
-    purchase?.filter((item) =>
-      item.buyer_name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [], [purchase, searchQuery]);
+  const filteredItems = useMemo(
+    () =>
+      purchase?.filter((item) =>
+        item.buyer_name.toLowerCase().includes(searchQuery.toLowerCase()),
+      ) || [],
+    [purchase, searchQuery],
+  );
 
   if (isLoading) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full">
-          <Loader />
-        </div>
-      </Page>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader>
-            <CardTitle className="text-destructive">Error Fetching purchase</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => refetch()} variant="outline">Try Again</Button>
-          </CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader>
+          <CardTitle className="text-destructive">
+            Error Fetching purchase
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={() => refetch()} variant="outline">
+            Try Again
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="w-full p-0 md:p-4 grid grid-cols-1">
-        {/* Mobile View */}
-        <div className="sm:hidden">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl md:text-2xl text-gray-800 font-medium">Purchase List</h1>
-            {userId != 3 && (
-              <Button
-                variant="default"
-                className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
-                onClick={() => navigate("/purchase/create")}
-              >
-                <SquarePlus className="h-4 w-4" /> Purchase
-              </Button>
-            )}
-          </div>
+    <div className="w-full p-0 md:p-4 grid grid-cols-1">
+      {/* Mobile View */}
+      <div className="sm:hidden">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl md:text-2xl text-gray-800 font-medium">
+            Purchase List
+          </h1>
+          {userId != 3 && (
+            <Button
+              variant="default"
+              className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
+              onClick={() => navigate("/purchase/create")}
+            >
+              <SquarePlus className="h-4 w-4" /> Purchase
+            </Button>
+          )}
 
           <div className="flex flex-col py-4 gap-2">
             <div className="relative w-full">
@@ -230,17 +241,19 @@ const PurchaseListPage = () => {
             </div>
           </div>
 
-          <PurchaseMobileList 
-            items={filteredItems} 
-            userId={userId} 
-            onStatusChange={refetch} 
+          <PurchaseMobileList
+            items={filteredItems}
+            userId={userId}
+            onStatusChange={refetch}
             onWhatsApp={onWhatsApp}
           />
         </div>
 
         {/* Desktop View */}
         <div className="hidden sm:block">
-          <div className="flex text-left text-2xl text-gray-800 font-[400]">Purchase List</div>
+          <div className="flex text-left text-2xl text-gray-800 font-[400]">
+            Purchase List
+          </div>
 
           <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
             <div className="relative w-full md:w-72">
@@ -261,14 +274,17 @@ const PurchaseListPage = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {table.getAllColumns()
+                  {table
+                    .getAllColumns()
                     .filter((column) => column.getCanHide())
                     .map((column) => (
                       <DropdownMenuCheckboxItem
                         key={column.id}
                         className="capitalize"
                         checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
                       >
                         {column.id}
                       </DropdownMenuCheckboxItem>
@@ -296,18 +312,22 @@ const PurchaseListPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the purchase.
+              This action cannot be undone. This will permanently delete the
+              purchase.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

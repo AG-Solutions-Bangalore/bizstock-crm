@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -179,104 +178,98 @@ const InvoiceListPage = () => {
 
   if (isLoading) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full"><Loader /></div>
-      </Page>
+      <div className="flex justify-center items-center h-full"><Loader /></div>
     );
   }
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Invoices</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Invoices</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="w-full p-0 md:p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Invoice List</h1>
-          {userId != 3 && (
-            <Button
-              className={`${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-              onClick={() => navigate("/invoice-form")}
-            >
-              <SquarePlus className="h-4 w-4 mr-2" /> Invoice
-            </Button>
-          )}
-        </div>
+    <div className="w-full p-0 md:p-4">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Invoice List</h1>
+        {userId != 3 && (
+          <Button
+            className={`${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
+            onClick={() => navigate("/invoice-form")}
+          >
+            <SquarePlus className="h-4 w-4 mr-2" /> Invoice
+          </Button>
+        )}
+      </div>
 
-        <div className="flex flex-col md:flex-row md:items-center mb-6 gap-4">
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-            <Input
-              placeholder="Search invoice..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 bg-white border-gray-200"
-            />
-          </div>
-          
-          <div className="md:ml-auto">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  Columns <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table.getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+      <div className="flex flex-col md:flex-row md:items-center mb-6 gap-4">
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search invoice..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8 bg-white border-gray-200"
+          />
         </div>
-
-        <div className="hidden md:block">
-          <InvoiceTable table={table} />
+        
+        <div className="md:ml-auto">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table.getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+      </div>
 
-        <div className="md:hidden">
-          <InvoiceMobileList items={filteredData} userId={userId} onDelete={handleDeleteRow} />
+      <div className="hidden md:block">
+        <InvoiceTable table={table} />
+      </div>
+
+      <div className="md:hidden">
+        <InvoiceMobileList items={filteredData} userId={userId} onDelete={handleDeleteRow} />
+      </div>
+
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          Total Invoices: {filteredData.length}
         </div>
-
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            Total Invoices: {filteredData.length}
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
         </div>
       </div>
 
@@ -296,7 +289,7 @@ const InvoiceListPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

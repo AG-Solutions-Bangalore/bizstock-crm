@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -48,12 +47,12 @@ const PreBookingFormPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const token = usetoken();
-  
+
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
   const userType = useSelector((state) => state.auth.user_type);
   const userbatch = useSelector((state) => state.auth?.branch_batch);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
@@ -95,16 +94,19 @@ const PreBookingFormPage = () => {
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
   const { data: itemsData, isLoading: loadingitem } = useFetchItems();
   const { data: godownData, isLoading: loadinggodown } = useFetchGoDown();
-  const { data: preBookingRef, isLoading: loadingref } = useFetchPreBookingRef();
+  const { data: preBookingRef, isLoading: loadingref } =
+    useFetchPreBookingRef();
 
   useEffect(() => {
     if (editId && prebookingByid?.prebooking) {
       setFormData({
         pre_booking_date: prebookingByid.prebooking.pre_booking_date || "",
-        pre_booking_buyer_id: prebookingByid.prebooking.pre_booking_buyer_id || "",
+        pre_booking_buyer_id:
+          prebookingByid.prebooking.pre_booking_buyer_id || "",
         pre_booking_buyer_city: prebookingByid.buyer?.buyer_city || "",
         pre_booking_ref_no: prebookingByid.prebooking.pre_booking_ref_no || "",
-        pre_booking_vehicle_no: prebookingByid.prebooking.pre_booking_vehicle_no || "",
+        pre_booking_vehicle_no:
+          prebookingByid.prebooking.pre_booking_vehicle_no || "",
         pre_booking_remark: prebookingByid.prebooking.pre_booking_remark || "",
         pre_booking_status: prebookingByid.prebooking.pre_booking_status || "",
       });
@@ -140,11 +142,14 @@ const PreBookingFormPage = () => {
     ]);
   }, []);
 
-  const removeRow = useCallback((index) => {
-    if (invoiceData.length > 1) {
-      setInvoiceData((prev) => prev.filter((_, i) => i !== index));
-    }
-  }, [invoiceData.length]);
+  const removeRow = useCallback(
+    (index) => {
+      if (invoiceData.length > 1) {
+        setInvoiceData((prev) => prev.filter((_, i) => i !== index));
+      }
+    },
+    [invoiceData.length],
+  );
 
   const fetchAndSetStock = async (rowIndex, itemId, godownId) => {
     if (!itemId || !godownId) return;
@@ -154,16 +159,28 @@ const PreBookingFormPage = () => {
       const itemPiece = Number(stock?.item_piece || 1);
       const safeNumber = (val) => Number(val) || 0;
 
-      const openingPurch = safeNumber(stock?.openpurch) * itemPiece + safeNumber(stock?.openpurch_piece);
-      const openingSale = safeNumber(stock?.closesale) * itemPiece + safeNumber(stock?.closesale_piece);
-      const openingPurchR = safeNumber(stock?.openpurchR) * itemPiece + safeNumber(stock?.openpurchR_piece);
-      const openingSaleR = safeNumber(stock?.closesaleR) * itemPiece + safeNumber(stock?.closesaleR_piece);
+      const openingPurch =
+        safeNumber(stock?.openpurch) * itemPiece +
+        safeNumber(stock?.openpurch_piece);
+      const openingSale =
+        safeNumber(stock?.closesale) * itemPiece +
+        safeNumber(stock?.closesale_piece);
+      const openingPurchR =
+        safeNumber(stock?.openpurchR) * itemPiece +
+        safeNumber(stock?.openpurchR_piece);
+      const openingSaleR =
+        safeNumber(stock?.closesaleR) * itemPiece +
+        safeNumber(stock?.closesaleR_piece);
       const opening = openingPurch - openingSale - openingPurchR + openingSaleR;
 
-      const purchase = safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
-      const purchaseR = safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
-      const sale = safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
-      const saleR = safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
+      const purchase =
+        safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
+      const purchaseR =
+        safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
+      const sale =
+        safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
+      const saleR =
+        safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
 
       const total = opening + purchase - purchaseR - sale + saleR;
       const totalBox = Math.floor(total / itemPiece);
@@ -172,7 +189,11 @@ const PreBookingFormPage = () => {
       setInvoiceData((prev) => {
         const newData = [...prev];
         if (newData[rowIndex]) {
-          newData[rowIndex].stockData = { total, total_box: totalBox, total_piece: totalPiece };
+          newData[rowIndex].stockData = {
+            total,
+            total_box: totalBox,
+            total_piece: totalPiece,
+          };
         }
         return newData;
       });
@@ -195,22 +216,31 @@ const PreBookingFormPage = () => {
 
       try {
         const res = await fetchBatchNoByItem(value, token);
-        const batches = res?.batchNo?.map((batch) => ({
-          value: batch.purchase_sub_batch_no,
-          label: batch.purchase_sub_batch_no,
-        })) || [];
+        const batches =
+          res?.batchNo?.map((batch) => ({
+            value: batch.purchase_sub_batch_no,
+            label: batch.purchase_sub_batch_no,
+          })) || [];
         setBatchOptions((prev) => ({ ...prev, [rowIndex]: batches }));
       } catch (err) {
         console.error("Batch fetch error:", err);
       }
 
       if (updatedData[rowIndex].pre_booking_sub_godown_id) {
-        fetchAndSetStock(rowIndex, value, updatedData[rowIndex].pre_booking_sub_godown_id);
+        fetchAndSetStock(
+          rowIndex,
+          value,
+          updatedData[rowIndex].pre_booking_sub_godown_id,
+        );
       }
     } else if (fieldName === "pre_booking_sub_godown_id") {
       updatedData[rowIndex][fieldName] = value;
       if (updatedData[rowIndex].pre_booking_sub_item_id) {
-        fetchAndSetStock(rowIndex, updatedData[rowIndex].pre_booking_sub_item_id, value);
+        fetchAndSetStock(
+          rowIndex,
+          updatedData[rowIndex].pre_booking_sub_item_id,
+          value,
+        );
       }
     } else {
       updatedData[rowIndex][fieldName] = value;
@@ -223,7 +253,9 @@ const PreBookingFormPage = () => {
     let updatedFormData = { ...formData, [field]: value };
 
     if (field === "pre_booking_buyer_id") {
-      const selectedBuyer = buyerData?.buyers.find((buyer) => buyer.id == value);
+      const selectedBuyer = buyerData?.buyers.find(
+        (buyer) => buyer.id == value,
+      );
       if (selectedBuyer) {
         updatedFormData.pre_booking_buyer_city = selectedBuyer.buyer_city;
       }
@@ -236,7 +268,9 @@ const PreBookingFormPage = () => {
     setIsLoading(true);
     try {
       const payload = { ...formData, pre_booking_product_data: invoiceData };
-      const url = editId ? `${PRE_BOOKING_CREATE}/${decryptedId}` : PRE_BOOKING_CREATE;
+      const url = editId
+        ? `${PRE_BOOKING_CREATE}/${decryptedId}`
+        : PRE_BOOKING_CREATE;
       const method = editId ? "put" : "post";
 
       const response = await apiClient[method](url, payload, {
@@ -246,12 +280,17 @@ const PreBookingFormPage = () => {
         toast({ title: "Success", description: response.data.msg });
         navigate("/pre-booking");
       } else {
-        toast({ title: "Error", description: response.data.msg, variant: "destructive" });
+        toast({
+          title: "Error",
+          description: response.data.msg,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: error?.response?.data?.message || "Failed to save prebooking",
+        description:
+          error?.response?.data?.message || "Failed to save prebooking",
         variant: "destructive",
       });
     } finally {
@@ -266,40 +305,60 @@ const PreBookingFormPage = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await apiClient.delete(`${PRE_BOOKING_SUB_DELETE}/${deleteItemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient.delete(
+        `${PRE_BOOKING_SUB_DELETE}/${deleteItemId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (response.data.code === 200) {
         toast({ title: "Success", description: response.data.msg });
         setInvoiceData((prev) => prev.filter((row) => row.id !== deleteItemId));
       }
     } catch (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setDeleteConfirmOpen(false);
       setDeleteItemId(null);
     }
   };
 
-  if (isFetching || loadingbuyer || loadingitem || loadinggodown || loadingref) {
+  if (
+    isFetching ||
+    loadingbuyer ||
+    loadingitem ||
+    loadinggodown ||
+    loadingref
+  ) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full"><Loader /></div>
-      </Page>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
   return (
-    <Page>
-      <div className="p-0 md:p-4">
-        <div className="flex items-center mb-6">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/pre-booking")} className="mr-2">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">{editId ? "Edit PreBooking" : "Create PreBooking"}</h1>
-            <p className="text-sm text-gray-500">Manage your pre-booking records</p>
-          </div>
+    <div className="p-0 md:p-4">
+      <div className="flex items-center mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/pre-booking")}
+          className="mr-2"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <h1 className="text-2xl font-bold">
+            {editId ? "Edit PreBooking" : "Create PreBooking"}
+          </h1>
+          <p className="text-sm text-gray-500">
+            Manage your pre-booking records
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -354,8 +413,18 @@ const PreBookingFormPage = () => {
           </div>
 
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => navigate("/pre-booking")}>Cancel</Button>
-            <Button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black px-8" disabled={isLoading}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate("/pre-booking")}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black px-8"
+              disabled={isLoading}
+            >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editId ? "Update PreBooking" : "Save PreBooking"}
             </Button>
@@ -367,15 +436,22 @@ const PreBookingFormPage = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>This will permanently delete this item from the pre-booking.</AlertDialogDescription>
+            <AlertDialogDescription>
+              This will permanently delete this item from the pre-booking.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

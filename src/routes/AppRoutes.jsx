@@ -1,148 +1,153 @@
 import { Route, Routes } from "react-router-dom";
 
-import StockView from "@/features/stock/pages/StockViewPage";
-
+// Auth & Shared
 import ForgotPassword from "@/app/auth/ForgotPassword";
 import Login from "@/app/auth/Login";
-import Maintenance from "@/components/common/Maintenance";
+import Signup from "@/app/auth/Signup";
 import AuthRoute from "./AuthRoute";
 import ProtectedRoute from "./ProtectedRoute";
-
-import { CreateDispatchPage, DispatchListPage, DispatchViewPage } from "@/features/dispatch";
-import { CreateDispatchReturnPage, DispatchReturnListPage, DispatchReturnViewPage } from "@/features/dispatch-return";
+import Maintenance from "@/components/common/Maintenance";
 import NotFound from "@/app/errors/NotFound";
 import Home from "@/app/home/Home";
+import ValidationWrapper from "@/utils/ValidationWrapper";
+
+// Master Data (Route Wrappers)
 import BranchList from "@/app/master/branch/BranchList";
 import BuyerList from "@/app/master/buyer/BuyerList";
 import CategoryList from "@/app/master/category/CategoryList";
 import GoDownList from "@/app/master/godown/GoDownList";
 import ItemList from "@/app/master/item/ItemList";
 import TeamList from "@/app/master/team/TeamList";
-import { InvoiceListPage, InvoiceFormPage } from "@/features/invoice";
-import { PaymentListPage } from "@/features/payment";
-import { QuotationListPage, QuotationFormPage } from "@/features/quotation";
-import Signup from "@/app/auth/Signup";
-import { PreBookingFormPage, PreBookingListPage, PreBookingViewPage } from "@/features/pre-booking";
-import { CreatePurchasePage, PurchaseListPage, PurchaseViewPage } from "@/features/purchase";
-import { CreatePurchaseReturnPage, PurchaseReturnListPage, PurchaseReturnViewPage } from "@/features/purchase-return";
-import BuyerReport from "@/features/report/pages/BuyerReportPage";
-import CategoryStock from "@/features/report/pages/CategoryStockPage";
-import DispatchReport from "@/features/report/pages/DispatchReportPage";
-import StockGoDown from "@/features/report/pages/GoDownStockPage";
-import Stock from "@/features/report/pages/OverallStockPage";
-import PaymentLedgerReport from "@/features/report/pages/PaymentLedgerPage";
-import PaymentSummaryReport from "@/features/report/pages/PaymentSummaryPage";
-import PurchaseReport from "@/features/report/pages/PurchaseReportPage";
-import SingleItemStock from "@/features/report/pages/SingleItemStockPage";
-import StockBatchView from "@/features/stock/pages/StockBatchPage";
-import ValidationWrapper from "@/utils/ValidationWrapper";
+
+// Feature Routes (Route Wrappers)
+import StockView from "@/app/stock/StockViewRoute";
+import StockBatchView from "@/app/stock/StockBatchRoute";
+
+import DispatchList from "@/app/dispatch/DispatchList";
+import CreateDispatch from "@/app/dispatch/CreateDispatch";
+import DispatchView from "@/app/dispatch/DispatchView";
+
+import DispatchReturnList from "@/app/dispatchreturn/DispatchReturnList";
+import CreateDispatchReturn from "@/app/dispatchreturn/CreateDispatchReturnForm";
+import DispatchReturnView from "@/app/dispatchreturn/DispatchReturnView";
+
+import InvoiceList from "@/app/invoice/InvoiceList";
+import InvoiceForm from "@/app/invoice/InvoiceForm";
+
+import PaymentList from "@/app/payment/PaymentList";
+
+import QuotationList from "@/app/quotation/QuotationList";
+import QuotationForm from "@/app/quotation/QuotationForm";
+
+import PreBookingList from "@/app/prebooking/PreBookingList";
+import PreBookingForm from "@/app/prebooking/PreBookingForm";
+import PreBookingView from "@/app/prebooking/PreBookingView";
+
+import PurchaseList from "@/app/purchase/PurchaseList";
+import CreatePurchase from "@/app/purchase/CreatePurchase";
+import PurchaseView from "@/app/purchase/PurchaseView";
+
+import PurchaseReturnList from "@/app/purchasereturn/PurchaseReturnList";
+import CreatePurchaseReturn from "@/app/purchasereturn/CreatePurchaseReturn";
+import PurchaseReturnView from "@/app/purchasereturn/PurchaseReturnView";
+
+// Report Routes (Route Wrappers)
+import BuyerReport from "@/app/report/BuyerReport";
+import CategoryStock from "@/app/report/CategoryStock";
+import DispatchReport from "@/app/report/DispatchReport";
+import GoDownStock from "@/app/report/GoDownStock";
+import OverallStock from "@/app/report/OverallStock";
+import PaymentLedger from "@/app/report/PaymentLedger";
+import PaymentSummary from "@/app/report/PaymentSummary";
+import PurchaseReport from "@/app/report/PurchaseReport";
+import SingleItemStock from "@/app/report/SingleItemStock";
 
 function AppRoutes() {
   return (
     <ValidationWrapper>
       <Routes>
-        {/* Done 4 layers done */}
+        {/* Auth Routes */}
         <Route path="/" element={<AuthRoute />}>
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/signup" element={<Signup />} />
         </Route>
-        {/*  */}
 
-        {/* Done 4 layers done */}
+        {/* Protected Routes */}
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
+
+          {/* Master Data */}
           <Route path="/master/buyer" element={<BuyerList />} />
           <Route path="/master/item" element={<ItemList />} />
           <Route path="/master/category" element={<CategoryList />} />
           <Route path="/master/branch" element={<BranchList />} />
           <Route path="/master/team" element={<TeamList />} />
           <Route path="/master/go-down" element={<GoDownList />} />
+
+          {/* Stock */}
           <Route path="/stock-batch-view" element={<StockBatchView />} />
           <Route path="/stock-view" element={<StockView />} />
 
-          <Route path="/purchase" element={<PurchaseListPage />} />
-          <Route path="/purchase/create" element={<CreatePurchasePage />} />
-          <Route path="/purchase/edit/:id" element={<CreatePurchasePage />} />
-          <Route path="/purchase/view/:id" element={<PurchaseViewPage />} />
-          <Route path="/purchase-return" element={<PurchaseReturnListPage />} />
-          <Route
-            path="/purchase-return/create"
-            element={<CreatePurchaseReturnPage />}
-          />
-          <Route
-            path="/purchase-return/edit/:id"
-            element={<CreatePurchaseReturnPage />}
-          />
-          <Route
-            path="/purchase-return/view/:id"
-            element={<PurchaseReturnViewPage />}
-          />
+          {/* Purchase */}
+          <Route path="/purchase" element={<PurchaseList />} />
+          <Route path="/purchase/create" element={<CreatePurchase />} />
+          <Route path="/purchase/edit/:id" element={<CreatePurchase />} />
+          <Route path="/purchase/view/:id" element={<PurchaseView />} />
 
+          {/* Purchase Return */}
+          <Route path="/purchase-return" element={<PurchaseReturnList />} />
+          <Route path="/purchase-return/create" element={<CreatePurchaseReturn />} />
+          <Route path="/purchase-return/edit/:id" element={<CreatePurchaseReturn />} />
+          <Route path="/purchase-return/view/:id" element={<PurchaseReturnView />} />
 
+          {/* Pre-Booking */}
+          <Route path="/pre-booking" element={<PreBookingList />} />
+          <Route path="/pre-booking/create" element={<PreBookingForm />} />
+          <Route path="/pre-booking/edit/:id" element={<PreBookingForm />} />
+          <Route path="/pre-booking/view/:id" element={<PreBookingView />} />
 
+          {/* Dispatch */}
+          <Route path="/dispatch" element={<DispatchList />} />
+          <Route path="/dispatch/create" element={<CreateDispatch />} />
+          <Route path="/dispatch/edit/:id" element={<CreateDispatch />} />
+          <Route path="/dispatch/view/:id" element={<DispatchView />} />
 
+          {/* Dispatch Return */}
+          <Route path="/dispatch-return" element={<DispatchReturnList />} />
+          <Route path="/dispatch-return/create" element={<CreateDispatchReturn />} />
+          <Route path="/dispatch-return/edit/:id" element={<CreateDispatchReturn />} />
+          <Route path="/dispatch-return/view/:id" element={<DispatchReturnView />} />
 
-          <Route path="/pre-booking" element={<PreBookingListPage />} />
-          <Route path="/pre-booking/create" element={<PreBookingFormPage />} />
-          <Route path="/pre-booking/edit/:id" element={<PreBookingFormPage />} />
-          <Route path="/pre-booking/view/:id" element={<PreBookingViewPage />} />
+          {/* Invoice */}
+          <Route path="/invoice" element={<InvoiceList />} />
+          <Route path="/invoice-form" element={<InvoiceForm />} />
+          <Route path="/invoice-form/:id" element={<InvoiceForm />} />
 
+          {/* Quotation */}
+          <Route path="/quotation" element={<QuotationList />} />
+          <Route path="/quotation/form" element={<QuotationForm />} />
+          <Route path="/quotation/form/:id" element={<QuotationForm />} />
 
+          {/* Payment */}
+          <Route path="/payment" element={<PaymentList />} />
+          <Route path="/payment/form" element={<PaymentList />} />
+          <Route path="/payment/form/:id" element={<PaymentList />} />
 
-          <Route path="/dispatch" element={<DispatchListPage />} />
-          <Route path="/dispatch/create" element={<CreateDispatchPage />} />
-          <Route path="/dispatch/edit/:id" element={<CreateDispatchPage />} />
-          <Route path="/dispatch/view/:id" element={<DispatchViewPage />} />
-
-          <Route path="/dispatch-return" element={<DispatchReturnListPage />} />
-          <Route
-            path="/dispatch-return/create"
-            element={<CreateDispatchReturnPage />}
-          />
-          <Route
-            path="/dispatch-return/edit/:id"
-            element={<CreateDispatchReturnPage />}
-          />
-          <Route
-            path="/dispatch-return/view/:id"
-            element={<DispatchReturnViewPage />}
-          />
-
-          {/*  */}
-
-          <Route path="/invoice" element={<InvoiceListPage />} />
-          <Route path="/invoice-form" element={<InvoiceFormPage />} />
-          <Route path="/invoice-form/:id" element={<InvoiceFormPage />} />
-          <Route path="/quotation" element={<QuotationListPage />} />
-          <Route path="/quotation/form" element={<QuotationFormPage />} />
-          <Route path="/quotation/form/:id" element={<QuotationFormPage />} />
-          <Route path="/payment" element={<PaymentListPage />} />
-          <Route path="/payment/form" element={<PaymentListPage />} />
-          <Route path="/payment/form/:id" element={<PaymentListPage />} />
-
-          {/* 4 layers done */}
-          <Route path="/report/stock" element={<Stock />} />
+          {/* Reports */}
+          <Route path="/report/stock" element={<OverallStock />} />
           <Route path="/report/buyer" element={<BuyerReport />} />
-          <Route
-            path="/report/single-item-stock"
-            element={<SingleItemStock />}
-          />
-          <Route
-            path="/report/payment-summary"
-            element={<PaymentSummaryReport />}
-          />
-          <Route
-            path="/report/payment-ledger"
-            element={<PaymentLedgerReport />}
-          />
+          <Route path="/report/single-item-stock" element={<SingleItemStock />} />
+          <Route path="/report/payment-summary" element={<PaymentSummary />} />
+          <Route path="/report/payment-ledger" element={<PaymentLedger />} />
           <Route path="/report/category-stock" element={<CategoryStock />} />
-          <Route path="/report/godown-stock" element={<StockGoDown />} />
+          <Route path="/report/godown-stock" element={<GoDownStock />} />
           <Route path="/report/purchase" element={<PurchaseReport />} />
           <Route path="/report/dispatch" element={<DispatchReport />} />
         </Route>
-        {/*  */}
+
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ValidationWrapper>

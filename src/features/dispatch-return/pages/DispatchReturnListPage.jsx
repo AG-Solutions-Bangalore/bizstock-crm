@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,10 +36,10 @@ import { ButtonConfig } from "@/config/ButtonConfig";
 import StatusToggle from "@/components/toggle/StatusToggle";
 import usetoken from "@/api/usetoken";
 import { useQueryClient } from "@tanstack/react-query";
-import { 
-  fetchDispatchReturnById, 
-  navigateTODispatchReturnEdit, 
-  navigateTODispatchReturnView 
+import {
+  fetchDispatchReturnById,
+  navigateTODispatchReturnEdit,
+  navigateTODispatchReturnView
 } from "@/api";
 
 import { useDispatchReturn } from "@/features/dispatch-return/hooks/useDispatchReturn";
@@ -121,9 +120,9 @@ const DispatchReturnListPage = () => {
     },
     ...(userId == 3
       ? [{
-          accessorKey: "branch_name",
-          header: "Branch Name",
-        }]
+        accessorKey: "branch_name",
+        header: "Branch Name",
+      }]
       : []),
     {
       accessorKey: "dispatch_status",
@@ -140,9 +139,9 @@ const DispatchReturnListPage = () => {
       id: "actions",
       header: "Action",
       cell: ({ row }) => (
-        <DispatchReturnActions 
-          dispatchId={row.original.id} 
-          userId={userId} 
+        <DispatchReturnActions
+          dispatchId={row.original.id}
+          userId={userId}
           onDelete={handleDeleteRow}
           onWhatsApp={onWhatsApp}
         />
@@ -154,7 +153,7 @@ const DispatchReturnListPage = () => {
     if (!dispatchReturn) return [];
     return dispatchReturn.filter(item => {
       const matchesSearch = item.buyer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.dispatch_ref_no?.toLowerCase().includes(searchQuery.toLowerCase());
+        item.dispatch_ref_no?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesDate = !selectedDate || moment(item.dispatch_date).format("YYYY-MM-DD") === selectedDate;
       return matchesSearch && matchesDate;
     });
@@ -186,45 +185,40 @@ const DispatchReturnListPage = () => {
 
   if (isLoading) {
     return (
-      <Page>
-        <div className="flex justify-center items-center h-full">
-          <Loader />
-        </div>
-      </Page>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader>
-            <CardTitle className="text-destructive">Error Fetching Dispatch Return</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => refetch()} variant="outline">Try Again</Button>
-          </CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader>
+          <CardTitle className="text-destructive">Error Fetching Dispatch Return</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={() => refetch()} variant="outline">Try Again</Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="w-full p-0 md:p-4 grid grid-cols-1">
-        <div className="hidden sm:block">
-          <div className="flex text-left text-2xl text-gray-800 font-[400] mb-4">Dispatch Return List</div>
+    <div className="w-full p-0 ">
+      <div className="hidden sm:block">
+        <div className="flex text-left text-2xl text-gray-800 font-[400] mb-4">Dispatch Return List</div>
 
-          <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
-            <div className="relative w-full md:w-72">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search dispatch return..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
-              />
-            </div>
+        <div className="flex flex-col py-4 gap-2">
+          <div className="relative w-full flex items-center gap-2">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search dispatch return..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
+            />
+
             <Input
               type="date"
               value={selectedDate}
@@ -301,8 +295,8 @@ const DispatchReturnListPage = () => {
             />
           </div>
 
-          <DispatchReturnMobileList 
-            items={filteredData} 
+          <DispatchReturnMobileList
+            items={filteredData}
             userId={userId}
             onEdit={(id) => navigateTODispatchReturnEdit(navigate, id)}
             onView={(id) => navigateTODispatchReturnView(navigate, id)}
@@ -328,7 +322,7 @@ const DispatchReturnListPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Page>
+    </div>
   );
 };
 

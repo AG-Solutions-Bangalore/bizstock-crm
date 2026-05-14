@@ -1,7 +1,12 @@
-import HomePage from "@/features/home/pages/HomePage";
+import Page from "@/app/dashboard/page";
+import { HomePage } from "@/features/home";
 
 const Home = () => {
-  return <HomePage />;
+  return (
+    <Page>
+      <HomePage />
+    </Page>
+  );
 };
 
 export default Home;

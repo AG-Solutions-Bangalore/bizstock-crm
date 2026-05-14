@@ -7,7 +7,6 @@ import { Printer, Loader2 } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import html2pdf from "html2pdf.js";
 
-import Page from "@/app/dashboard/page";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { ButtonConfig } from "@/config/ButtonConfig";
@@ -58,7 +57,7 @@ const DispatchReturnViewPage = () => {
       .catch(() => setIsPdfLoading(false));
   };
 
-  if (isLoading) return <Page><div className="flex justify-center items-center h-full"><Loader /></div></Page>;
+  if (isLoading) return <div className="flex justify-center items-center h-full"><Loader /></div>;
 
   const dispatch = dispatchData?.dispatch || {};
   const buyer = dispatchData?.buyer || {};
@@ -69,7 +68,7 @@ const DispatchReturnViewPage = () => {
   const totalWeight = dispatchSub.reduce((sum, row) => sum + ((row.item_weight || 0) * (row.dispatch_sub_box || 0)), 0);
 
   return (
-    <Page>
+    <div className="w-full">
       <div className={`sticky top-0 z-10 border border-gray-200 rounded-lg ${ButtonConfig.cardheaderColor} shadow-sm p-4 mb-4`}>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <h1 className="text-xl font-bold">Dispatch Return Details</h1>
@@ -152,7 +151,7 @@ const DispatchReturnViewPage = () => {
           <p className="p-3"><span className="font-bold">REMARK:</span> {dispatch.dispatch_remark}</p>
         </div>
       </div>
-    </Page>
+    </div>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-import Page from "@/app/dashboard/page";
 import { useFetchGoDown, useFetchItems } from "@/hooks/useApi";
 import { useGoDownStock } from "../hooks/useReport";
 import GoDownStockFilters from "../components/GoDownStockFilters";
@@ -144,18 +143,15 @@ const GoDownStockPage = () => {
 
   if (isError) {
     return (
-      <Page>
-        <Card className="w-full max-w-md mx-auto mt-10">
-          <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
-          <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
-        </Card>
-      </Page>
+      <Card className="w-full max-w-md mx-auto mt-10">
+        <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
+        <CardContent><Button onClick={() => refetch()} variant="outline">Try Again</Button></CardContent>
+      </Card>
     );
   }
 
   return (
-    <Page>
-      <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
         <GoDownStockFilters
           formData={formData}
           handleInputChange={handleInputChange}
@@ -187,8 +183,7 @@ const GoDownStockPage = () => {
             <p>Please select a godown and date range to view the stock summary.</p>
           </div>
         )}
-      </div>
-    </Page>
+    </div>
   );
 };
 
