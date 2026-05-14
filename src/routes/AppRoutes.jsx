@@ -18,17 +18,13 @@ import CategoryList from "@/app/master/category/CategoryList";
 import GoDownList from "@/app/master/godown/GoDownList";
 import ItemList from "@/app/master/item/ItemList";
 import TeamList from "@/app/master/team/TeamList";
-import PaymentForm from "@/app/payment/PaymentForm";
-
+import { InvoiceListPage, InvoiceFormPage } from "@/features/invoice";
+import { PaymentListPage } from "@/features/payment";
+import { QuotationListPage, QuotationFormPage } from "@/features/quotation";
 import Signup from "@/app/auth/Signup";
-import InvoiceForm from "@/app/invoice/InvoiceForm";
-import InvoiceList from "@/app/invoice/InvoiceList";
-import PaymentList from "@/app/payment/PaymentList";
 import { PreBookingFormPage, PreBookingListPage, PreBookingViewPage } from "@/features/pre-booking";
 import { CreatePurchasePage, PurchaseListPage, PurchaseViewPage } from "@/features/purchase";
 import { CreatePurchaseReturnPage, PurchaseReturnListPage, PurchaseReturnViewPage } from "@/features/purchase-return";
-import QuotationForm from "@/app/quotation/QuotationForm";
-import QuotationList from "@/app/quotation/QuotationList";
 import BuyerReport from "@/features/report/pages/BuyerReportPage";
 import CategoryStock from "@/features/report/pages/CategoryStockPage";
 import DispatchReport from "@/features/report/pages/DispatchReportPage";
@@ -114,18 +110,17 @@ function AppRoutes() {
             element={<DispatchReturnViewPage />}
           />
 
-
           {/*  */}
 
-          <Route path="/invoice" element={<InvoiceList />} />
-          <Route path="/invoice-form" element={<InvoiceForm />} />
-          <Route path="/invoice-form/:id" element={<InvoiceForm />} />
-          <Route path="/quotation" element={<QuotationList />} />
-          <Route path="/quotation/form" element={<QuotationForm />} />
-          <Route path="/quotation/form/:id" element={<QuotationForm />} />
-          <Route path="/payment" element={<PaymentList />} />
-          <Route path="/payment/form" element={<PaymentForm />} />
-          <Route path="/payment/form/:id" element={<PaymentForm />} />
+          <Route path="/invoice" element={<InvoiceListPage />} />
+          <Route path="/invoice-form" element={<InvoiceFormPage />} />
+          <Route path="/invoice-form/:id" element={<InvoiceFormPage />} />
+          <Route path="/quotation" element={<QuotationListPage />} />
+          <Route path="/quotation/form" element={<QuotationFormPage />} />
+          <Route path="/quotation/form/:id" element={<QuotationFormPage />} />
+          <Route path="/payment" element={<PaymentListPage />} />
+          <Route path="/payment/form" element={<PaymentListPage />} />
+          <Route path="/payment/form/:id" element={<PaymentListPage />} />
 
           {/* 4 layers done */}
           <Route path="/report/stock" element={<Stock />} />
