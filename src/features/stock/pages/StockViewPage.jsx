@@ -16,7 +16,7 @@ const StockViewPage = () => {
   const [categories, setCategories] = useState(["All Categories"]);
   const [brands, setBrands] = useState(["All Brands"]);
   const [selectedBrands, setSelectedBrands] = useState("All Brands");
-  
+
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
   const columnVisibility = useSelector((state) => state.columnVisibility);
@@ -31,7 +31,7 @@ const StockViewPage = () => {
       const uniqueBrands = [
         ...new Set(stockData.map((item) => item.item_brand)),
       ];
-      
+
       const sortedBrands = uniqueBrands
         .filter(Boolean)
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
@@ -47,38 +47,48 @@ const StockViewPage = () => {
 
   const calculateStock = (item) => {
     const itemPiece = Number(item.item_piece) || 1;
-    const openingPurch = Number(item.openpurch) * itemPiece + Number(item.openpurch_piece);
-    const openingSale = Number(item.closesale) * itemPiece + Number(item.closesale_piece);
-    const openingPurchR = Number(item.openpurchR || 0) * itemPiece + Number(item.openpurchR_piece || 0);
-    const openingSaleR = Number(item.closesaleR || 0) * itemPiece + Number(item.closesaleR_piece || 0);
-    const openingBalance = (openingPurch - openingSale) - (openingPurchR - openingSaleR);
+    const openingPurch =
+      Number(item.openpurch) * itemPiece + Number(item.openpurch_piece);
+    const openingSale =
+      Number(item.closesale) * itemPiece + Number(item.closesale_piece);
+    const openingPurchR =
+      Number(item.openpurchR || 0) * itemPiece +
+      Number(item.openpurchR_piece || 0);
+    const openingSaleR =
+      Number(item.closesaleR || 0) * itemPiece +
+      Number(item.closesaleR_piece || 0);
+    const openingBalance =
+      openingPurch - openingSale - (openingPurchR - openingSaleR);
 
     const purchase = Number(item.purch) * itemPiece + Number(item.purch_piece);
-    const purchaseR = Number(item.purchR || 0) * itemPiece + Number(item.purchR_piece || 0);
+    const purchaseR =
+      Number(item.purchR || 0) * itemPiece + Number(item.purchR_piece || 0);
     const sale = Number(item.sale) * itemPiece + Number(item.sale_piece);
-    const saleR = Number(item.saleR || 0) * itemPiece + Number(item.saleR_piece || 0);
+    const saleR =
+      Number(item.saleR || 0) * itemPiece + Number(item.saleR_piece || 0);
 
     return openingBalance + (purchase - purchaseR) - (sale - saleR);
   };
 
-  const filteredItems = stockData?.filter((item) => {
-    const searchLower = searchQuery.toLowerCase();
-    const total = calculateStock(item);
-    
-    const matchesSearch =
-      (item?.item_name || "").toLowerCase().includes(searchLower) ||
-      (item?.item_category || "").toLowerCase().includes(searchLower) ||
-      (item?.item_size || "").toLowerCase().includes(searchLower) ||
-      total.toString().toLowerCase().includes(searchLower);
+  const filteredItems =
+    stockData?.filter((item) => {
+      const searchLower = searchQuery.toLowerCase();
+      const total = calculateStock(item);
 
-    const matchesCategory =
-      selectedCategory === "All Categories" ||
-      item.item_category === selectedCategory;
-    const matchesBrand =
-      selectedBrands === "All Brands" || item.item_brand === selectedBrands;
+      const matchesSearch =
+        (item?.item_name || "").toLowerCase().includes(searchLower) ||
+        (item?.item_category || "").toLowerCase().includes(searchLower) ||
+        (item?.item_size || "").toLowerCase().includes(searchLower) ||
+        total.toString().toLowerCase().includes(searchLower);
 
-    return matchesSearch && matchesCategory && matchesBrand;
-  }) || [];
+      const matchesCategory =
+        selectedCategory === "All Categories" ||
+        item.item_category === selectedCategory;
+      const matchesBrand =
+        selectedBrands === "All Brands" || item.item_brand === selectedBrands;
+
+      return matchesSearch && matchesCategory && matchesBrand;
+    }) || [];
 
   const handlePrintPdf = useReactToPrint({
     content: () => containerRef.current,
@@ -88,7 +98,11 @@ const StockViewPage = () => {
 
   const downloadCSV = (filteredItems, toast) => {
     if (!filteredItems || filteredItems.length === 0) {
-      toast?.({ title: "No Data", description: "No data available to export", variant: "destructive" });
+      toast?.({
+        title: "No Data",
+        description: "No data available to export",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -98,12 +112,17 @@ const StockViewPage = () => {
 
     if (columnVisibility?.item_name) headers.push("Item Name");
     if (columnVisibility?.category) headers.push("Category");
+    if (columnVisibility?.item_size) headers.push("Item Size");
     if (columnVisibility?.brand) headers.push("Brand");
     if (columnVisibility?.size) headers.push("Size");
 
-    const isSingleBranchOnly = (singlebranch === "Yes" && doublebranch === "No") || (singlebranch === "No" && doublebranch === "Yes");
+    const isSingleBranchOnly =
+      (singlebranch === "Yes" && doublebranch === "No") ||
+      (singlebranch === "No" && doublebranch === "Yes");
     const isDoubleBranch = singlebranch === "Yes" && doublebranch === "Yes";
-    const hasPreBooking = filteredItems.some(item => Number(item.pre_box) > 0 || Number(item.pre_piece) > 0);
+    const hasPreBooking = filteredItems.some(
+      (item) => Number(item.pre_box) > 0 || Number(item.pre_piece) > 0,
+    );
 
     if (columnVisibility.available_box) {
       if (isSingleBranchOnly) {
@@ -127,6 +146,7 @@ const StockViewPage = () => {
       const row = [];
       if (columnVisibility.item_name) row.push(item.item_name || "");
       if (columnVisibility.category) row.push(item.item_category || "");
+      if (columnVisibility.item_size) row.push(item.item_size || "");
       if (columnVisibility.brand) row.push(item.item_brand || "");
       if (columnVisibility.size) row.push(item.item_size || "");
 
@@ -138,7 +158,12 @@ const StockViewPage = () => {
         }
       }
 
-      if (hasPreBooking) row.push(Number(item.pre_box) > 0 || Number(item.pre_piece) > 0 ? `${item.pre_box} / ${item.pre_piece}` : "");
+      if (hasPreBooking)
+        row.push(
+          Number(item.pre_box) > 0 || Number(item.pre_piece) > 0
+            ? `${item.pre_box} / ${item.pre_piece}`
+            : "",
+        );
 
       return row;
     };
@@ -156,9 +181,15 @@ const StockViewPage = () => {
   if (isError) {
     return (
       <Card className="w-full max-w-md mx-auto mt-10">
-        <CardHeader><CardTitle className="text-destructive">Error Fetching Stock</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="text-destructive">
+            Error Fetching Stock
+          </CardTitle>
+        </CardHeader>
         <CardContent>
-          <Button onClick={() => refetch()} variant="outline">Try Again</Button>
+          <Button onClick={() => refetch()} variant="outline">
+            Try Again
+          </Button>
         </CardContent>
       </Card>
     );
@@ -166,26 +197,26 @@ const StockViewPage = () => {
 
   return (
     <Card className="shadow-sm border-0">
-        <CardContent className="p-2">
-          <StockTable
-            title="Stock View"
-            selectedCategory={selectedCategory}
-            selectedBrands={selectedBrands}
-            setSelectedBrands={setSelectedBrands}
-            setSelectedCategory={setSelectedCategory}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filteredItems={filteredItems}
-            categories={categories}
-            containerRef={containerRef}
-            handlePrintPdf={handlePrintPdf}
-            downloadCSV={downloadCSV}
-            currentDate={currentDate}
-            print="true"
-            brands={brands}
-            loading={isFetching}
-          />
-        </CardContent>
+      <CardContent className="p-2">
+        <StockTable
+          title="Stock View"
+          selectedCategory={selectedCategory}
+          selectedBrands={selectedBrands}
+          setSelectedBrands={setSelectedBrands}
+          setSelectedCategory={setSelectedCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filteredItems={filteredItems}
+          categories={categories}
+          containerRef={containerRef}
+          handlePrintPdf={handlePrintPdf}
+          downloadCSV={downloadCSV}
+          currentDate={currentDate}
+          print="true"
+          brands={brands}
+          loading={isFetching}
+        />
+      </CardContent>
     </Card>
   );
 };
