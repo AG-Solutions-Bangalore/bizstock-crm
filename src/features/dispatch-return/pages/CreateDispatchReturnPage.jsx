@@ -21,7 +21,6 @@ import {
 
 import {
   fetchAvaiableItem,
-  fetchDispatchReturnById,
   DISPATCH_RETURN_CREATE,
   DISPATCH_RETURN_EDIT_LIST,
   DISPATCH_RETURN_SUB_DELETE,
@@ -43,7 +42,7 @@ import { DispatchReturnFormMobile } from "../components/DispatchReturnForm/Dispa
 
 const CreateDispatchReturnPage = () => {
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  const decryptedId = id ? decryptId(id) : null;
   const editId = Boolean(id);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -88,9 +87,17 @@ const CreateDispatchReturnPage = () => {
   const [batchOptions, setBatchOptions] = useState({});
 
   const { data: dispatchByid, isFetching } = useQuery({
-    queryKey: ["dispatch-return", id],
-    queryFn: () => fetchDispatchReturnById(id, token),
-    enabled: !!id,
+    queryKey: ["dispatch-return", decryptedId],
+    queryFn: async () => {
+      const response = await apiClient.get(
+        `${DISPATCH_RETURN_EDIT_LIST}/${decryptedId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      return response.data;
+    },
+    enabled: !!decryptedId && !!token,
   });
 
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
