@@ -13,11 +13,11 @@ export const usePayment = (token) => {
       enabled: !!token,
     });
 
-  const usePaymentById = (id) =>
+  const usePaymentById = (id, enabled = true) =>
     useQuery({
       queryKey: ["payment", id],
       queryFn: () => paymentService.getById(id, token),
-      enabled: !!id && !!token,
+      enabled: !!id && !!token && enabled,
     });
 
   const usePaymentModes = (enabled = true) =>

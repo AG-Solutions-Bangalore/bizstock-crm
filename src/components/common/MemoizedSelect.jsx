@@ -48,6 +48,10 @@ export const MemoizedSelect = React.memo(
         border: "1px solid #e5e7eb",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       }),
+      menuPortal: (provided) => ({
+        ...provided,
+        zIndex: 9999,
+      }),
       placeholder: (provided) => ({
         ...provided,
         color: "#616161",
@@ -92,6 +96,8 @@ export const MemoizedSelect = React.memo(
           IndicatorSeparator: () => null,
           DropdownIndicator,
         }}
+        menuPortalTarget={typeof document !== "undefined" ? document.body : undefined}
+        menuPosition="fixed"
       />
     );
   }

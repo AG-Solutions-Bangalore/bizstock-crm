@@ -17,7 +17,7 @@ const PaymentFormDialog = ({ paymentId = null }) => {
   
   const { data: buyerData } = useFetchBuyers();
   const { data: paymentModes } = usePaymentModes(open);
-  const { data: paymentData, isFetching } = usePaymentById(paymentId);
+  const { data: paymentData, isFetching } = usePaymentById(paymentId, open);
 
   const [formData, setFormData] = useState({
     payment_date: "",
@@ -38,8 +38,17 @@ const PaymentFormDialog = ({ paymentId = null }) => {
         payment_transaction: paymentData.payment_transaction || "",
         payment_remarks: paymentData.payment_remarks || "",
       });
+    } else if (!paymentId && open) {
+      setFormData({
+        payment_date: "",
+        payment_buyer_id: "",
+        payment_mode: "",
+        payment_amount: "",
+        payment_transaction: "",
+        payment_remarks: "",
+      });
     }
-  }, [paymentId, paymentData]);
+  }, [paymentId, paymentData, open]);
 
   const handleInputChange = (e, field) => {
     const value = e?.target ? e.target.value : e;

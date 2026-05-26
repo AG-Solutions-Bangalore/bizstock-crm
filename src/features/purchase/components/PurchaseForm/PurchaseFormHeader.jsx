@@ -12,8 +12,8 @@ export const PurchaseFormHeader = ({
   editId 
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Date<span className="text-red-500">*</span></label>
         <Input
           type="date"
@@ -23,7 +23,7 @@ export const PurchaseFormHeader = ({
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium">Buyer<span className="text-red-500">*</span></label>
           {!editId && <BuyerForm />}
@@ -43,7 +43,7 @@ export const PurchaseFormHeader = ({
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Ref No<span className="text-red-500">*</span></label>
         {editId ? (
           <Input value={formData.purchase_ref_no} disabled />
@@ -59,7 +59,7 @@ export const PurchaseFormHeader = ({
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Vehicle No</label>
         <Input
           value={formData.purchase_vehicle_no}
@@ -68,7 +68,7 @@ export const PurchaseFormHeader = ({
         />
       </div>
 
-      <div className="md:col-span-4 space-y-2">
+      <div className="min-w-0 space-y-2 sm:col-span-2 xl:col-span-4">
         <label className="text-sm font-medium">Remark</label>
         <Textarea
           value={formData.purchase_remark}

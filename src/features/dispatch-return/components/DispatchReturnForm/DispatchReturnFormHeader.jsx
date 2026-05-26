@@ -11,8 +11,8 @@ export const DispatchReturnFormHeader = ({
   editId 
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Date<span className="text-red-500">*</span></label>
         <Input
           type="date"
@@ -22,7 +22,7 @@ export const DispatchReturnFormHeader = ({
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium">Buyer<span className="text-red-500">*</span></label>
           {!editId && <BuyerForm />}
@@ -42,7 +42,7 @@ export const DispatchReturnFormHeader = ({
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Ref No<span className="text-red-500">*</span></label>
         {editId ? (
           <Input value={formData.dispatch_ref_no} disabled />
@@ -58,7 +58,7 @@ export const DispatchReturnFormHeader = ({
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">Vehicle No</label>
         <Input
           value={formData.dispatch_vehicle_no}
@@ -67,7 +67,7 @@ export const DispatchReturnFormHeader = ({
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="min-w-0 space-y-2">
         <label className="text-sm font-medium">City</label>
         <Input
           value={formData.dispatch_buyer_city}
@@ -76,7 +76,7 @@ export const DispatchReturnFormHeader = ({
         />
       </div>
 
-      <div className="md:col-span-3 space-y-2">
+      <div className="min-w-0 space-y-2 sm:col-span-2 xl:col-span-3">
         <label className="text-sm font-medium">Remark</label>
         <Textarea
           value={formData.dispatch_remark}

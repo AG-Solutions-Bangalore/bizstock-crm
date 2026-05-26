@@ -88,7 +88,7 @@ const PaymentListPage = () => {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <PaymentFormDialog paymentId={row.original.id} />
+          <PaymentFormDialog paymentId={row.original.id || row.original.payment_id} />
         </div>
       ),
     },

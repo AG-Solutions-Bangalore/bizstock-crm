@@ -247,7 +247,7 @@ export const fetchPreBookingById = async (encryptedId, token) => {
   try {
     if (!token) throw new Error("No authentication token found");
 
-    const id = decryptId(encryptedId);
+    const id = decryptId(encryptedId) || encryptedId;
     const response = await apiClient.get(`${PRE_BOOKING_CREATE}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

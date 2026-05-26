@@ -21,7 +21,6 @@ import {
 
 import {
   fetchAvaiableItem,
-  fetchPurchaseById,
   PURCHASE_CREATE,
   PURCHASE_EDIT_LIST,
   PURCHASE_SUB_DELETE,
@@ -43,7 +42,7 @@ import { PurchaseFormMobile } from "../components/PurchaseForm/PurchaseFormMobil
 
 const CreatePurchasePage = () => {
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  const decryptedId = id ? decryptId(id) : null;
   const editId = Boolean(id);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -85,10 +84,18 @@ const CreatePurchasePage = () => {
 
   const [batchOptions, setBatchOptions] = useState({});
 
-  const { data: purchaseByid, isFetching, refetch } = useQuery({
-    queryKey: ["purchaseByid", id],
-    queryFn: () => fetchPurchaseById(id, token),
-    enabled: !!id,
+  const { data: purchaseByid, isFetching } = useQuery({
+    queryKey: ["purchaseByid", decryptedId],
+    queryFn: async () => {
+      const response = await apiClient.get(
+        `${PURCHASE_EDIT_LIST}/${decryptedId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      return response.data;
+    },
+    enabled: !!decryptedId && !!token,
   });
 
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
@@ -279,78 +286,100 @@ const CreatePurchasePage = () => {
   }
 
   return (
-    <div className="p-0 md:p-4">
-        <div className="flex items-center mb-6">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/purchase")} className="mr-2">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">{editId ? "Edit Purchase" : "Create Purchase"}</h1>
-            <p className="text-sm text-gray-500">Manage your purchase records</p>
-          </div>
-     
+    <div className="w-full p-0 md:p-4 space-y-4">
+      <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/purchase")}
+          className="shrink-0"
+          type="button"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            {editId ? "Edit Purchase" : "Create Purchase"}
+          </h1>
+          <p className="text-sm text-gray-500">
+            Manage purchase details and item quantities
+          </p>
+        </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <PurchaseFormHeader
-              formData={formData}
-              handleInputChange={handleInputChange}
-              buyerData={buyerData}
-              purchaseRef={purchaseRef}
-              editId={editId}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
+          <PurchaseFormHeader
+            formData={formData}
+            handleInputChange={handleInputChange}
+            buyerData={buyerData}
+            purchaseRef={purchaseRef}
+            editId={editId}
+          />
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Items Details
+            </h2>
+          </div>
+
+          <div className="hidden md:block">
+            <PurchaseFormTable
+              invoiceData={invoiceData}
+              handlePaymentChange={handlePaymentChange}
+              itemsData={itemsData}
+              godownData={godownData}
+              addRow={addRow}
+              removeRow={removeRow}
+              handleDeleteRow={handleDeleteRow}
+              userType={userType}
+              singlebranch={singlebranch}
+              doublebranch={doublebranch}
+              userbatch={userbatch}
+              batchOptions={batchOptions}
+              boxInputRefs={boxInputRefs}
             />
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Items Details</h2>
-            </div>
-
-            <div className="hidden md:block">
-              <PurchaseFormTable
-                invoiceData={invoiceData}
-                handlePaymentChange={handlePaymentChange}
-                itemsData={itemsData}
-                godownData={godownData}
-                addRow={addRow}
-                removeRow={removeRow}
-                handleDeleteRow={handleDeleteRow}
-                userType={userType}
-                singlebranch={singlebranch}
-                doublebranch={doublebranch}
-                userbatch={userbatch}
-                batchOptions={batchOptions}
-                boxInputRefs={boxInputRefs}
-              />
-            </div>
-
-            <div className="md:hidden">
-              <PurchaseFormMobile
-                invoiceData={invoiceData}
-                handlePaymentChange={handlePaymentChange}
-                itemsData={itemsData}
-                godownData={godownData}
-                addRow={addRow}
-                removeRow={removeRow}
-                handleDeleteRow={handleDeleteRow}
-                userType={userType}
-                singlebranch={singlebranch}
-                doublebranch={doublebranch}
-                userbatch={userbatch}
-                boxInputRefs={boxInputRefs}
-              />
-            </div>
+          <div className="md:hidden">
+            <PurchaseFormMobile
+              invoiceData={invoiceData}
+              handlePaymentChange={handlePaymentChange}
+              itemsData={itemsData}
+              godownData={godownData}
+              addRow={addRow}
+              removeRow={removeRow}
+              handleDeleteRow={handleDeleteRow}
+              userType={userType}
+              singlebranch={singlebranch}
+              doublebranch={doublebranch}
+              userbatch={userbatch}
+              boxInputRefs={boxInputRefs}
+            />
           </div>
+        </div>
 
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => navigate("/purchase")}>Cancel</Button>
-            <Button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black px-8" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {editId ? "Update Purchase" : "Save Purchase"}
-            </Button>
-          </div>
-        </form>
-      </div>
+        <div className="sticky bottom-0 z-10 -mx-0 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/purchase")}
+            className="w-full sm:w-auto"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-black px-8"
+            disabled={isLoading}
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {editId ? "Update Purchase" : "Save Purchase"}
+          </Button>
+        </div>
+      </form>
 
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent>
