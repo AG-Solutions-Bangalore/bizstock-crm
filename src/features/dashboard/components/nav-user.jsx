@@ -106,7 +106,7 @@ export function NavUser({ user }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on : {formatLatestDate(new Date(), DATE_PRESETS.DISPLAY)}
+                      Updated on :  26/05/2026
                     </span>
                   </div>
                 </div>

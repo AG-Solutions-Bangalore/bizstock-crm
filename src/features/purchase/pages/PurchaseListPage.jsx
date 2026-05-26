@@ -215,30 +215,30 @@ const PurchaseListPage = () => {
     <div className="w-full p-0 md:p-4 grid grid-cols-1">
       {/* Mobile View */}
       <div className="sm:hidden">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl md:text-2xl text-gray-800 font-medium">
-            Purchase List
-          </h1>
-          {userId != 3 && (
-            <Button
-              variant="default"
-              className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
-              onClick={() => navigate("/purchase/create")}
-            >
-              <SquarePlus className="h-4 w-4" /> Purchase
-            </Button>
-          )}
+        <div className="flex flex-col gap-4 mb-4">
+          <div className="flex justify-between items-center gap-2">
+            <h1 className="text-xl md:text-2xl text-gray-800 font-medium">
+              Purchase List
+            </h1>
+            {userId != 3 && (
+              <Button
+                variant="default"
+                className="bg-yellow-400 hover:bg-yellow-600 text-black rounded-l-full"
+                onClick={() => navigate("/purchase/create")}
+              >
+                <SquarePlus className="h-4 w-4" /> Purchase
+              </Button>
+            )}
+          </div>
 
-          <div className="flex flex-col py-4 gap-2">
-            <div className="relative w-full">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search purchase..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
-              />
-            </div>
+          <div className="relative w-full">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search purchase..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
+            />
           </div>
 
           <PurchaseMobileList
@@ -248,63 +248,63 @@ const PurchaseListPage = () => {
             onWhatsApp={onWhatsApp}
           />
         </div>
+      </div>
 
-        {/* Desktop View */}
-        <div className="hidden sm:block">
-          <div className="flex text-left text-2xl text-gray-800 font-[400]">
-            Purchase List
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
-            <div className="relative w-full md:w-72">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search Purchase..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row md:ml-auto gap-2 w-full md:w-auto">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    Columns <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {table
-                    .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {userId != 3 && (
-                <Button
-                  variant="default"
-                  className={`ml-2 ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
-                  onClick={() => navigate("/purchase/create")}
-                >
-                  <SquarePlus className="h-4 w-4 mr-2" /> Purchase
-                </Button>
-              )}
-            </div>
-          </div>
-
-          <PurchaseTable table={table} />
+      {/* Desktop View */}
+      <div className="hidden sm:block">
+        <div className="flex text-left text-2xl text-gray-800 font-[400]">
+          Purchase List
         </div>
+
+        <div className="flex flex-col md:flex-row md:items-center py-4 gap-2">
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search Purchase..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8 bg-gray-50 border-gray-200 focus:border-gray-300 focus:ring-gray-200 w-full"
+            />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:ml-auto gap-2 w-full md:w-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full md:w-auto">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {userId != 3 && (
+              <Button
+                variant="default"
+                className={`ml-2 ${ButtonConfig.backgroundColor} ${ButtonConfig.hoverBackgroundColor} ${ButtonConfig.textColor}`}
+                onClick={() => navigate("/purchase/create")}
+              >
+                <SquarePlus className="h-4 w-4 mr-2" /> Purchase
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <PurchaseTable table={table} />
       </div>
 
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import { Printer } from "lucide-react";
@@ -12,11 +12,13 @@ import { Button } from "@/components/ui/button";
 import { ButtonConfig } from "@/config/ButtonConfig";
 import { IMAGE_URL, NO_IMAGE_URL } from "@/config/BaseUrl";
 import usetoken from "@/api/usetoken";
+import { decryptId } from "@/components/common/Encryption";
 import { toggleDispatchColumn } from "@/redux/dispatchColumnVisibilitySlice";
 import { dispatchService } from "../api/dispatchService";
 
 const DispatchViewPage = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
   const containerRef = useRef();
   const token = usetoken();
   const dispatchAction = useDispatch();
@@ -30,9 +32,9 @@ const DispatchViewPage = () => {
   };
 
   const { data: dispatchData, isLoading } = useQuery({
-    queryKey: ["dispatch", id],
-    queryFn: () => dispatchService.getById(id, token),
-    enabled: !!id,
+    queryKey: ["dispatch", decryptedId],
+    queryFn: () => dispatchService.getById(decryptedId, token),
+    enabled: !!decryptedId && !!token,
   });
 
   const handlePrintPdf = useReactToPrint({
@@ -54,7 +56,7 @@ const DispatchViewPage = () => {
       .from(containerRef.current)
       .set({
         margin: 10,
-        filename: `Dispatch_${id}.pdf`,
+        filename: `Dispatch_${decryptedId}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
@@ -67,6 +69,9 @@ const DispatchViewPage = () => {
   const dispatch = dispatchData?.dispatch || {};
   const buyer = dispatchData?.buyer || {};
   const dispatchSub = dispatchData?.dispatchSub || [];
+  const dispatchDate = dispatch.dispatch_date
+    ? moment(dispatch.dispatch_date).format("DD-MMM-YYYY")
+    : "";
 
   const totalSubPiece = dispatchSub.reduce((sum, row) => sum + (row.dispatch_sub_piece || 0), 0);
   const totalSubBox = dispatchSub.reduce((sum, row) => sum + (row.dispatch_sub_box || 0), 0);
@@ -107,7 +112,7 @@ const DispatchViewPage = () => {
           </div>
           <div>
             <div className="p-3 border-b border-black"><span className="font-bold">City:</span> {buyer.buyer_city}</div>
-            <div className="p-3"><span className="font-bold">Date:</span> {moment(dispatch.dispatch_date).format("DD-MMM-YYYY")}</div>
+            <div className="p-3"><span className="font-bold">Date:</span> {dispatchDate}</div>
           </div>
         </div>
 

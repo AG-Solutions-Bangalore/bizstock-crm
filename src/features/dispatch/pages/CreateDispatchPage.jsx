@@ -21,7 +21,6 @@ import {
 
 import {
   fetchAvaiableItem,
-  fetchDispatchById,
   DISPATCH_CREATE,
   DISPATCH_EDIT_LIST,
   DISPATCH_SUB_DELETE,
@@ -43,7 +42,7 @@ import { DispatchFormMobile } from "../components/DispatchForm/DispatchFormMobil
 
 const CreateDispatchPage = () => {
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  const decryptedId = id ? decryptId(id) : null;
   const editId = Boolean(id);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -88,9 +87,14 @@ const CreateDispatchPage = () => {
   const [batchOptions, setBatchOptions] = useState({});
 
   const { data: dispatchByid, isFetching } = useQuery({
-    queryKey: ["dispatch", id],
-    queryFn: () => fetchDispatchById(id, token),
-    enabled: !!id,
+    queryKey: ["dispatch", decryptedId],
+    queryFn: async () => {
+      const response = await apiClient.get(`${DISPATCH_EDIT_LIST}/${decryptedId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    },
+    enabled: !!decryptedId && !!token,
   });
 
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
