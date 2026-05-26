@@ -36,7 +36,7 @@ export const PaymentMobileList = ({ items, onDelete }) => {
                 </h3>
               </div>
               <div className="flex items-center gap-1">
-                <PaymentFormDialog paymentId={item.id} />
+                <PaymentFormDialog paymentId={item.id || item.payment_id} />
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>

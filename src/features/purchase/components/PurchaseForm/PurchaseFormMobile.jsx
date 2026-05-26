@@ -21,27 +21,36 @@ export const PurchaseFormMobile = ({
   return (
     <div className="space-y-4">
       {invoiceData.map((row, index) => (
-        <div key={index} className="bg-white p-4 rounded-xl shadow-sm border border-yellow-100 relative">
-          <div className="absolute top-2 right-2 flex gap-2">
-            {row.id ? (
-              userType == 2 && (
-                <button type="button" onClick={() => handleDeleteRow(row.id)} className="text-red-500">
-                  <Trash2 className="h-5 w-5" />
+        <div key={index} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="inline-flex h-7 min-w-7 items-center justify-center rounded-md bg-gray-100 px-2 text-xs font-medium text-gray-700">
+              {index + 1}
+            </div>
+            <div className="flex gap-2">
+              {row.id ? (
+                userType == 2 && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteRow(row.id)}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-red-500 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                )
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => removeRow(index)}
+                  disabled={invoiceData.length === 1}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-md text-red-500 hover:bg-red-50 disabled:opacity-30"
+                >
+                  <MinusCircle className="h-5 w-5" />
                 </button>
-              )
-            ) : (
-              <button
-                type="button"
-                onClick={() => removeRow(index)}
-                disabled={invoiceData.length === 1}
-                className="text-red-500 disabled:opacity-30"
-              >
-                <MinusCircle className="h-5 w-5" />
-              </button>
-            )}
+              )}
+            </div>
           </div>
 
-          <div className="space-y-3 pt-4">
+          <div className="space-y-3">
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-gray-500">Item</label>
@@ -115,7 +124,7 @@ export const PurchaseFormMobile = ({
       <button
         type="button"
         onClick={addRow}
-        className="w-full py-3 bg-yellow-50 text-yellow-600 rounded-xl border border-dashed border-yellow-300 font-medium flex items-center justify-center hover:bg-yellow-100 transition-colors"
+        className="flex w-full items-center justify-center rounded-lg border border-dashed border-yellow-300 bg-yellow-50 py-3 font-medium text-yellow-700 transition-colors hover:bg-yellow-100"
       >
         <PlusCircle className="h-5 w-5 mr-2" /> Add New Item
       </button>

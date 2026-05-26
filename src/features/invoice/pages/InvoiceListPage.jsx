@@ -40,6 +40,7 @@ import {
 
 import { ButtonConfig } from "@/config/ButtonConfig";
 import usetoken from "@/api/usetoken";
+import { navigateToInvoiceEdit } from "@/api";
 import { useInvoice } from "../hooks/useInvoice";
 import { InvoiceTable } from "../components/InvoiceList/InvoiceTable";
 import { InvoiceMobileList } from "../components/InvoiceList/InvoiceMobileList";
@@ -121,7 +122,7 @@ const InvoiceListPage = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={() => navigate(`/invoice-form/${row.original.id}`)}>
+                  <Button variant="ghost" size="icon" onClick={() => navigateToInvoiceEdit(navigate, row.original.id)}>
                     <Edit className="h-4 w-4 text-blue-500" />
                   </Button>
                 </TooltipTrigger>

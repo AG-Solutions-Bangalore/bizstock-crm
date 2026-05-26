@@ -27,19 +27,24 @@ export const DispatchReturnFormTable = ({
   batchOptions
 }) => {
   return (
-    <div className="rounded-md border overflow-hidden">
-      <Table>
+    <div className="rounded-lg border border-gray-200 bg-white">
+      <Table className="min-w-[1040px]">
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="w-12 text-center">#</TableHead>
-            <TableHead className="min-w-[200px]">Item <CreateItem /></TableHead>
-            {userbatch === "Yes" && <TableHead>Batch No</TableHead>}
-            <TableHead className="min-w-[150px]">Godown</TableHead>
-            <TableHead>Stock</TableHead>
+            <TableHead className="min-w-[260px]">
+              <div className="flex items-center gap-2">
+                <span>Item</span>
+                <CreateItem />
+              </div>
+            </TableHead>
+            {userbatch === "Yes" && <TableHead className="min-w-[150px]">Batch No</TableHead>}
+            <TableHead className="min-w-[180px]">Godown</TableHead>
+            <TableHead className="min-w-[110px]">Stock</TableHead>
             <TableHead className="w-32">Rate</TableHead>
-            {singlebranch === "Yes" && <TableHead className="w-24">Box</TableHead>}
-            {doublebranch === "Yes" && <TableHead className="w-24">Piece</TableHead>}
-            <TableHead className="w-12"></TableHead>
+            {singlebranch === "Yes" && <TableHead className="w-28">Box</TableHead>}
+            {doublebranch === "Yes" && <TableHead className="w-28">Piece</TableHead>}
+            <TableHead className="w-14 text-center"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -78,7 +83,7 @@ export const DispatchReturnFormTable = ({
                 />
               </TableCell>
               <TableCell>
-                <div className="text-xs">
+                <div className="rounded-md bg-gray-50 px-2 py-1 text-xs text-gray-700">
                   {row.stockData?.total_box || 0} B / {row.stockData?.total_piece || 0} P
                 </div>
               </TableCell>
@@ -87,6 +92,7 @@ export const DispatchReturnFormTable = ({
                   type="number"
                   value={row.dispatch_sub_rate}
                   onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_rate")}
+                  className="min-w-[96px]"
                 />
               </TableCell>
               {singlebranch === "Yes" && (
@@ -95,6 +101,7 @@ export const DispatchReturnFormTable = ({
                     type="number"
                     value={row.dispatch_sub_box}
                     onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_box")}
+                    className="min-w-[84px]"
                   />
                 </TableCell>
               )}
@@ -104,14 +111,19 @@ export const DispatchReturnFormTable = ({
                     type="number"
                     value={row.dispatch_sub_piece}
                     onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_piece")}
+                    className="min-w-[84px]"
                   />
                 </TableCell>
               )}
-              <TableCell>
-                <div className="flex items-center gap-1">
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center gap-1">
                   {row.id ? (
                     userType == 2 && (
-                      <button type="button" onClick={() => handleDeleteRow(row.id)} className="text-red-500">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteRow(row.id)}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-red-500 hover:bg-red-50"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     )
@@ -120,7 +132,7 @@ export const DispatchReturnFormTable = ({
                       type="button"
                       onClick={() => removeRow(index)}
                       disabled={invoiceData.length === 1}
-                      className="text-red-500 disabled:opacity-30"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-md text-red-500 hover:bg-red-50 disabled:opacity-30"
                     >
                       <MinusCircle className="h-4 w-4" />
                     </button>
@@ -135,7 +147,7 @@ export const DispatchReturnFormTable = ({
         <button
           type="button"
           onClick={addRow}
-          className="flex items-center text-sm text-yellow-600 font-medium hover:text-yellow-700"
+          className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-yellow-700 hover:bg-yellow-50"
         >
           <PlusCircle className="h-4 w-4 mr-1" /> Add Row
         </button>
