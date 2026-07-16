@@ -22,7 +22,7 @@ const StockViewPage = () => {
   const columnVisibility = useSelector((state) => state.columnVisibility);
 
   const { data: stockData, isFetching, isError, refetch } = useStockReport();
-
+  console.log(stockData);
   useEffect(() => {
     if (stockData && stockData.length > 0) {
       const uniqueCategories = [

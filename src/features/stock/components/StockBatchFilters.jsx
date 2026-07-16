@@ -3,19 +3,21 @@ import { Input } from "@/components/ui/input";
 import { ButtonConfig } from "@/config/ButtonConfig";
 import { Printer } from "lucide-react";
 
-const StockBatchFilters = ({ 
-  formData, 
-  handleInputChange, 
-  range, 
-  setRange, 
-  minTotal, 
-  maxTotal, 
-  sliderTrackRef, 
-  handleTrackClick, 
-  handlePrintPdf 
+const StockBatchFilters = ({
+  formData,
+  handleInputChange,
+  range,
+  setRange,
+  minTotal,
+  maxTotal,
+  sliderTrackRef,
+  handleTrackClick,
+  handlePrintPdf,
 }) => {
   return (
-    <div className={`sticky top-0 z-10 border border-gray-200 rounded-lg ${ButtonConfig.cardheaderColor} shadow-sm p-4 mb-2`}>
+    <div
+      className={`sticky top-0 z-50 bg-white border border-gray-200 rounded-lg ${ButtonConfig.cardheaderColor} shadow-sm p-4 mb-2`}
+    >
       <div className="flex flex-col md:flex-row md:items-center gap-4 sm:gap-8">
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -29,7 +31,9 @@ const StockBatchFilters = ({
         <div className="flex flex-col sm:flex-row items-center gap-6 w-full md:w-auto">
           <div className="flex flex-col gap-2">
             <div className="w-full sm:w-auto">
-              <label className={`block ${ButtonConfig.cardLabel} text-sm mb-1 font-medium`}>
+              <label
+                className={`block ${ButtonConfig.cardLabel} text-sm mb-1 font-medium`}
+              >
                 From Date <span className="text-red-500">*</span>
               </label>
               <Input
@@ -41,7 +45,9 @@ const StockBatchFilters = ({
             </div>
 
             <div className="w-full sm:w-auto">
-              <label className={`block ${ButtonConfig.cardLabel} text-sm mb-1 font-medium`}>
+              <label
+                className={`block ${ButtonConfig.cardLabel} text-sm mb-1 font-medium`}
+              >
                 To Date <span className="text-red-500">*</span>
               </label>
               <Input
