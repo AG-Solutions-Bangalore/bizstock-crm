@@ -21,20 +21,30 @@ const StockBatchPage = () => {
   });
 
   const { data: stockData, isLoading, isError } = useStockBatchReport(formData);
-
+  console.log("stockBt", stockData);
   useEffect(() => {
     if (stockData && stockData.length > 0) {
       const allTotals = stockData.map((buyer) => {
         const itemPiece = Number(buyer.item_piece) || 1;
-        const opening = (Number(buyer.openpurch || 0) * itemPiece + Number(buyer.openpurch_piece || 0)) -
-                        (Number(buyer.closesale || 0) * itemPiece + Number(buyer.closesale_piece || 0)) -
-                        (Number(buyer.openpurchR || 0) * itemPiece + Number(buyer.openpurchR_piece || 0)) +
-                        (Number(buyer.closesaleR || 0) * itemPiece + Number(buyer.closesaleR_piece || 0));
+        const opening =
+          Number(buyer.openpurch || 0) * itemPiece +
+          Number(buyer.openpurch_piece || 0) -
+          (Number(buyer.closesale || 0) * itemPiece +
+            Number(buyer.closesale_piece || 0)) -
+          (Number(buyer.openpurchR || 0) * itemPiece +
+            Number(buyer.openpurchR_piece || 0)) +
+          (Number(buyer.closesaleR || 0) * itemPiece +
+            Number(buyer.closesaleR_piece || 0));
 
-        const purchase = Number(buyer.purch || 0) * itemPiece + Number(buyer.purch_piece || 0);
-        const purchaseR = Number(buyer.purchR || 0) * itemPiece + Number(buyer.purchR_piece || 0);
-        const sale = Number(buyer.sale || 0) * itemPiece + Number(buyer.sale_piece || 0);
-        const saleR = Number(buyer.saleR || 0) * itemPiece + Number(buyer.saleR_piece || 0);
+        const purchase =
+          Number(buyer.purch || 0) * itemPiece + Number(buyer.purch_piece || 0);
+        const purchaseR =
+          Number(buyer.purchR || 0) * itemPiece +
+          Number(buyer.purchR_piece || 0);
+        const sale =
+          Number(buyer.sale || 0) * itemPiece + Number(buyer.sale_piece || 0);
+        const saleR =
+          Number(buyer.saleR || 0) * itemPiece + Number(buyer.saleR_piece || 0);
 
         const total = opening + purchase - purchaseR - sale + saleR;
         return isNaN(total) ? 0 : total;
@@ -55,7 +65,7 @@ const StockBatchPage = () => {
     const clickX = e.clientX - rect.left;
     const width = rect.width;
     let clickedValue = Math.round(
-      (clickX / width) * (maxTotal - minTotal) + minTotal
+      (clickX / width) * (maxTotal - minTotal) + minTotal,
     );
 
     clickedValue = Math.max(minTotal, Math.min(maxTotal, clickedValue));
@@ -77,7 +87,7 @@ const StockBatchPage = () => {
 
   const handlePrintPdf = useReactToPrint({
     content: () => containerRef.current,
-    documentTitle: "Stock Batch Summary",
+    documentTitle: "Stock Batch Summarys",
     pageStyle: `
       @page { size: A4 portrait; margin: 5mm; }
       @media print {
@@ -110,30 +120,30 @@ const StockBatchPage = () => {
 
   return (
     <div className="p-0 md:p-4">
-        <StockBatchFilters 
-          formData={formData}
-          handleInputChange={handleInputChange}
-          range={range}
-          setRange={setRange}
-          minTotal={minTotal}
-          maxTotal={maxTotal}
-          sliderTrackRef={sliderTrackRef}
-          handleTrackClick={handleTrackClick}
-          handlePrintPdf={handlePrintPdf}
-        />
+      <StockBatchFilters
+        formData={formData}
+        handleInputChange={handleInputChange}
+        range={range}
+        setRange={setRange}
+        minTotal={minTotal}
+        maxTotal={maxTotal}
+        sliderTrackRef={sliderTrackRef}
+        handleTrackClick={handleTrackClick}
+        handlePrintPdf={handlePrintPdf}
+      />
 
-        {isLoading || isLocalLoading ? (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <Loader />
-          </div>
-        ) : (
-          <StockBatchTable 
-            data={stockData || []}
-            range={range}
-            containerRef={containerRef}
-            formData={formData}
-          />
-        )}
+      {isLoading || isLocalLoading ? (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <Loader />
+        </div>
+      ) : (
+        <StockBatchTable
+          data={stockData || []}
+          range={range}
+          containerRef={containerRef}
+          formData={formData}
+        />
+      )}
     </div>
   );
 };
