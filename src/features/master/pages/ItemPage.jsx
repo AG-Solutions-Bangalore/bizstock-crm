@@ -39,10 +39,14 @@ const ItemPage = () => {
     {
       accessorKey: "item_name",
       header: "Item Name",
-      cell: ({ row }) => <div className="font-medium text-yellow-900">{row.getValue("item_name")}</div>,
+      cell: ({ row }) => (
+        <div className="font-medium text-yellow-900">
+          {row.getValue("item_name")}
+        </div>
+      ),
     },
     {
-      accessorKey: "category_name",
+      accessorKey: "item_category",
       header: "Category",
     },
     {
@@ -56,7 +60,9 @@ const ItemPage = () => {
       cell: ({ row }) => {
         const status = row.getValue("item_status");
         return (
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-medium ${status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
+          >
             {status}
           </span>
         );
@@ -85,7 +91,8 @@ const ItemPage = () => {
   });
 
   if (isLoading) return <Loader />;
-  if (isError) return <div className="p-4 text-red-500">Error loading items.</div>;
+  if (isError)
+    return <div className="p-4 text-red-500">Error loading items.</div>;
 
   return (
     <div className="w-full space-y-4 animate-in fade-in duration-500">
@@ -97,7 +104,9 @@ const ItemPage = () => {
       <Card className="border-yellow-100 shadow-sm overflow-hidden">
         <CardHeader className="bg-yellow-50/50 pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold text-yellow-900">Items Inventory</CardTitle>
+            <CardTitle className="text-lg font-semibold text-yellow-900">
+              Items Inventory
+            </CardTitle>
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-yellow-600" />
               <Input
@@ -115,8 +124,16 @@ const ItemPage = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="text-yellow-900 font-semibold">
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead
+                      key={header.id}
+                      className="text-yellow-900 font-semibold"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -127,13 +144,23 @@ const ItemPage = () => {
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">No items found.</TableCell>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No items found.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>

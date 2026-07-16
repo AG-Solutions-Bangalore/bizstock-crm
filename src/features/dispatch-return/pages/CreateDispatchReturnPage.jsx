@@ -47,12 +47,12 @@ const CreateDispatchReturnPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const token = usetoken();
-  
+
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
   const userType = useSelector((state) => state.auth.user_type);
   const userbatch = useSelector((state) => state.auth?.branch_batch);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
@@ -103,7 +103,8 @@ const CreateDispatchReturnPage = () => {
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
   const { data: itemsData, isLoading: loadingitem } = useFetchItems();
   const { data: godownData, isLoading: loadinggodown } = useFetchGoDown();
-  const { data: dispatchRef, isLoading: loadingref } = useFetchDispatchReturnRef();
+  const { data: dispatchRef, isLoading: loadingref } =
+    useFetchDispatchReturnRef();
 
   useEffect(() => {
     if (editId && dispatchByid?.dispatch) {
@@ -150,11 +151,14 @@ const CreateDispatchReturnPage = () => {
     ]);
   }, []);
 
-  const removeRow = useCallback((index) => {
-    if (invoiceData.length > 1) {
-      setInvoiceData((prev) => prev.filter((_, i) => i !== index));
-    }
-  }, [invoiceData.length]);
+  const removeRow = useCallback(
+    (index) => {
+      if (invoiceData.length > 1) {
+        setInvoiceData((prev) => prev.filter((_, i) => i !== index));
+      }
+    },
+    [invoiceData.length],
+  );
 
   const fetchAndSetStock = async (rowIndex, itemId, godownId) => {
     if (!itemId || !godownId) return;
@@ -164,16 +168,28 @@ const CreateDispatchReturnPage = () => {
       const itemPiece = Number(stock?.item_piece || 1);
       const safeNumber = (val) => Number(val) || 0;
 
-      const openingPurch = safeNumber(stock?.openpurch) * itemPiece + safeNumber(stock?.openpurch_piece);
-      const openingSale = safeNumber(stock?.closesale) * itemPiece + safeNumber(stock?.closesale_piece);
-      const openingPurchR = safeNumber(stock?.openpurchR) * itemPiece + safeNumber(stock?.openpurchR_piece);
-      const openingSaleR = safeNumber(stock?.closesaleR) * itemPiece + safeNumber(stock?.closesaleR_piece);
+      const openingPurch =
+        safeNumber(stock?.openpurch) * itemPiece +
+        safeNumber(stock?.openpurch_piece);
+      const openingSale =
+        safeNumber(stock?.closesale) * itemPiece +
+        safeNumber(stock?.closesale_piece);
+      const openingPurchR =
+        safeNumber(stock?.openpurchR) * itemPiece +
+        safeNumber(stock?.openpurchR_piece);
+      const openingSaleR =
+        safeNumber(stock?.closesaleR) * itemPiece +
+        safeNumber(stock?.closesaleR_piece);
       const opening = openingPurch - openingSale - openingPurchR + openingSaleR;
 
-      const purchase = safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
-      const purchaseR = safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
-      const sale = safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
-      const saleR = safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
+      const purchase =
+        safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
+      const purchaseR =
+        safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
+      const sale =
+        safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
+      const saleR =
+        safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
 
       const total = opening + purchase - purchaseR - sale + saleR;
       const totalBox = Math.floor(total / itemPiece);
@@ -182,7 +198,11 @@ const CreateDispatchReturnPage = () => {
       setInvoiceData((prev) => {
         const newData = [...prev];
         if (newData[rowIndex]) {
-          newData[rowIndex].stockData = { total, total_box: totalBox, total_piece: totalPiece };
+          newData[rowIndex].stockData = {
+            total,
+            total_box: totalBox,
+            total_piece: totalPiece,
+          };
         }
         return newData;
       });
@@ -206,22 +226,31 @@ const CreateDispatchReturnPage = () => {
 
       try {
         const res = await fetchBatchNoByItem(value, token);
-        const batches = res?.batchNo?.map((batch) => ({
-          value: batch.purchase_sub_batch_no,
-          label: batch.purchase_sub_batch_no,
-        })) || [];
+        const batches =
+          res?.batchNo?.map((batch) => ({
+            value: batch.purchase_sub_batch_no,
+            label: batch.purchase_sub_batch_no,
+          })) || [];
         setBatchOptions((prev) => ({ ...prev, [rowIndex]: batches }));
       } catch (err) {
         console.error("Batch fetch error:", err);
       }
 
       if (updatedData[rowIndex].dispatch_sub_godown_id) {
-        fetchAndSetStock(rowIndex, value, updatedData[rowIndex].dispatch_sub_godown_id);
+        fetchAndSetStock(
+          rowIndex,
+          value,
+          updatedData[rowIndex].dispatch_sub_godown_id,
+        );
       }
     } else if (fieldName === "dispatch_sub_godown_id") {
       updatedData[rowIndex][fieldName] = value;
       if (updatedData[rowIndex].dispatch_sub_item_id) {
-        fetchAndSetStock(rowIndex, updatedData[rowIndex].dispatch_sub_item_id, value);
+        fetchAndSetStock(
+          rowIndex,
+          updatedData[rowIndex].dispatch_sub_item_id,
+          value,
+        );
       }
     } else {
       updatedData[rowIndex][fieldName] = value;
@@ -234,7 +263,9 @@ const CreateDispatchReturnPage = () => {
     let updatedFormData = { ...formData, [field]: value };
 
     if (field === "dispatch_buyer_id") {
-      const selectedBuyer = buyerData?.buyers.find((buyer) => buyer.id == value);
+      const selectedBuyer = buyerData?.buyers.find(
+        (buyer) => buyer.id == value,
+      );
       if (selectedBuyer) {
         updatedFormData.dispatch_buyer_city = selectedBuyer.buyer_city;
       }
@@ -247,7 +278,9 @@ const CreateDispatchReturnPage = () => {
     setIsLoading(true);
     try {
       const payload = { ...formData, dispatch_product_data: invoiceData };
-      const url = editId ? `${DISPATCH_RETURN_EDIT_LIST}/${decryptedId}` : DISPATCH_RETURN_CREATE;
+      const url = editId
+        ? `${DISPATCH_RETURN_EDIT_LIST}/${decryptedId}`
+        : DISPATCH_RETURN_CREATE;
       const method = editId ? "put" : "post";
 
       const response = await apiClient[method](url, payload, {
@@ -257,12 +290,17 @@ const CreateDispatchReturnPage = () => {
         toast({ title: "Success", description: response.data.msg });
         navigate("/dispatch-return");
       } else {
-        toast({ title: "Error", description: response.data.msg, variant: "destructive" });
+        toast({
+          title: "Error",
+          description: response.data.msg,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: error?.response?.data?.message || "Failed to save dispatch return",
+        description:
+          error?.response?.data?.message || "Failed to save dispatch return",
         variant: "destructive",
       });
     } finally {
@@ -277,24 +315,39 @@ const CreateDispatchReturnPage = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await apiClient.delete(`${DISPATCH_RETURN_SUB_DELETE}/${deleteItemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient.delete(
+        `${DISPATCH_RETURN_SUB_DELETE}/${deleteItemId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (response.data.code === 200) {
         toast({ title: "Success", description: response.data.msg });
         setInvoiceData((prev) => prev.filter((row) => row.id !== deleteItemId));
       }
     } catch (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setDeleteConfirmOpen(false);
       setDeleteItemId(null);
     }
   };
 
-  if (isFetching || loadingbuyer || loadingitem || loadinggodown || loadingref) {
+  if (
+    isFetching ||
+    loadingbuyer ||
+    loadingitem ||
+    loadinggodown ||
+    loadingref
+  ) {
     return (
-      <div className="flex justify-center items-center h-full"><Loader /></div>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
@@ -373,7 +426,7 @@ const CreateDispatchReturnPage = () => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 z-10 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
+        <div className="sticky bottom-0 z-0 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
           <Button
             type="button"
             variant="outline"
@@ -397,11 +450,18 @@ const CreateDispatchReturnPage = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>This will permanently delete this item from the dispatch return.</AlertDialogDescription>
+            <AlertDialogDescription>
+              This will permanently delete this item from the dispatch return.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

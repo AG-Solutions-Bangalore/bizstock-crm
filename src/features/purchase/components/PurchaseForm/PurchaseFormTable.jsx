@@ -25,7 +25,7 @@ export const PurchaseFormTable = ({
   doublebranch,
   userbatch,
   batchOptions,
-  boxInputRefs
+  boxInputRefs,
 }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
@@ -39,11 +39,17 @@ export const PurchaseFormTable = ({
                 <CreateItem />
               </div>
             </TableHead>
-            {userbatch === "Yes" && <TableHead className="min-w-[150px]">Batch No</TableHead>}
+            {userbatch === "Yes" && (
+              <TableHead className="min-w-[150px]">Batch No</TableHead>
+            )}
             <TableHead className="min-w-[180px]">Godown</TableHead>
             <TableHead className="min-w-[110px]">Stock</TableHead>
-            {singlebranch === "Yes" && <TableHead className="w-28">Box</TableHead>}
-            {doublebranch === "Yes" && <TableHead className="w-28">Piece</TableHead>}
+            {singlebranch === "Yes" && (
+              <TableHead className="w-28">Box</TableHead>
+            )}
+            {doublebranch === "Yes" && (
+              <TableHead className="w-28">Piece</TableHead>
+            )}
             <TableHead className="w-14 text-center"></TableHead>
           </TableRow>
         </TableHeader>
@@ -54,8 +60,15 @@ export const PurchaseFormTable = ({
               <TableCell>
                 <MemoizedProductSelect
                   value={row.purchase_sub_item_id}
-                  onChange={(e) => handlePaymentChange(e, index, "purchase_sub_item_id")}
-                  options={itemsData?.items?.map(i => ({ value: i.id, label: i.item_name })) || []}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "purchase_sub_item_id")
+                  }
+                  options={
+                    itemsData?.items?.map((i) => ({
+                      value: i.id,
+                      label: i.item_name,
+                    })) || []
+                  }
                   placeholder="Select Item"
                 />
                 {row.item_size && (
@@ -69,7 +82,9 @@ export const PurchaseFormTable = ({
                   <Input
                     ref={(el) => (boxInputRefs.current[index] = el)}
                     value={row.purchase_sub_batch_no || ""}
-                    onChange={(e) => handlePaymentChange(e, index, "purchase_sub_batch_no")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "purchase_sub_batch_no")
+                    }
                     placeholder="Batch"
                     className="min-w-[130px]"
                   />
@@ -78,14 +93,22 @@ export const PurchaseFormTable = ({
               <TableCell>
                 <MemoizedSelect
                   value={row.purchase_sub_godown_id}
-                  onChange={(e) => handlePaymentChange(e, index, "purchase_sub_godown_id")}
-                  options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "purchase_sub_godown_id")
+                  }
+                  options={
+                    godownData?.godown?.map((g) => ({
+                      value: g.id,
+                      label: g.godown,
+                    })) || []
+                  }
                   placeholder="Godown"
                 />
               </TableCell>
               <TableCell>
                 <div className="rounded-md bg-gray-50 px-2 py-1 text-xs text-gray-700">
-                  {row.stockData?.total_box || 0} B / {row.stockData?.total_piece || 0} P
+                  {row.stockData?.total_box || 0} B /{" "}
+                  {row.stockData?.total_piece || 0} P
                 </div>
               </TableCell>
               {singlebranch === "Yes" && (
@@ -93,7 +116,9 @@ export const PurchaseFormTable = ({
                   <Input
                     type="number"
                     value={row.purchase_sub_box}
-                    onChange={(e) => handlePaymentChange(e, index, "purchase_sub_box")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "purchase_sub_box")
+                    }
                     className="min-w-[84px]"
                   />
                 </TableCell>
@@ -103,7 +128,9 @@ export const PurchaseFormTable = ({
                   <Input
                     type="number"
                     value={row.purchase_sub_piece}
-                    onChange={(e) => handlePaymentChange(e, index, "purchase_sub_piece")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "purchase_sub_piece")
+                    }
                     className="min-w-[84px]"
                   />
                 </TableCell>

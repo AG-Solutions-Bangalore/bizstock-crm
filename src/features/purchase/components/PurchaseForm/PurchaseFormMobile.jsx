@@ -16,12 +16,15 @@ export const PurchaseFormMobile = ({
   singlebranch,
   doublebranch,
   userbatch,
-  boxInputRefs
+  boxInputRefs,
 }) => {
   return (
     <div className="space-y-4">
       {invoiceData.map((row, index) => (
-        <div key={index} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div
+          key={index}
+          className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+        >
           <div className="mb-3 flex items-center justify-between gap-3">
             <div className="inline-flex h-7 min-w-7 items-center justify-center rounded-md bg-gray-100 px-2 text-xs font-medium text-gray-700">
               {index + 1}
@@ -53,13 +56,22 @@ export const PurchaseFormMobile = ({
           <div className="space-y-3">
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium text-gray-500">Item</label>
+                <label className="text-xs font-medium text-gray-500">
+                  Item
+                </label>
                 <CreateItem />
               </div>
               <MemoizedProductSelect
                 value={row.purchase_sub_item_id}
-                onChange={(e) => handlePaymentChange(e, index, "purchase_sub_item_id")}
-                options={itemsData?.items?.map(i => ({ value: i.id, label: i.item_name })) || []}
+                onChange={(e) =>
+                  handlePaymentChange(e, index, "purchase_sub_item_id")
+                }
+                options={
+                  itemsData?.items?.map((i) => ({
+                    value: i.id,
+                    label: i.item_name,
+                  })) || []
+                }
                 placeholder="Select Item"
               />
               {row.item_size && (
@@ -71,22 +83,35 @@ export const PurchaseFormMobile = ({
 
             {userbatch === "Yes" && (
               <div className="space-y-1">
-                <label className="text-xs font-medium text-gray-500">Batch No</label>
+                <label className="text-xs font-medium text-gray-500">
+                  Batch No
+                </label>
                 <Input
                   ref={(el) => (boxInputRefs.current[index] = el)}
                   value={row.purchase_sub_batch_no || ""}
-                  onChange={(e) => handlePaymentChange(e, index, "purchase_sub_batch_no")}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "purchase_sub_batch_no")
+                  }
                   placeholder="Batch No"
                 />
               </div>
             )}
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500">Godown</label>
+              <label className="text-xs font-medium text-gray-500">
+                Godown
+              </label>
               <MemoizedSelect
                 value={row.purchase_sub_godown_id}
-                onChange={(e) => handlePaymentChange(e, index, "purchase_sub_godown_id")}
-                options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                onChange={(e) =>
+                  handlePaymentChange(e, index, "purchase_sub_godown_id")
+                }
+                options={
+                  godownData?.godown?.map((g) => ({
+                    value: g.id,
+                    label: g.godown,
+                  })) || []
+                }
                 placeholder="Select Godown"
               />
             </div>
@@ -94,28 +119,37 @@ export const PurchaseFormMobile = ({
             <div className="grid grid-cols-2 gap-3">
               {singlebranch === "Yes" && (
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500">Box</label>
+                  <label className="text-xs font-medium text-gray-500">
+                    Box
+                  </label>
                   <Input
                     type="number"
                     value={row.purchase_sub_box}
-                    onChange={(e) => handlePaymentChange(e, index, "purchase_sub_box")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "purchase_sub_box")
+                    }
                   />
                 </div>
               )}
               {doublebranch === "Yes" && (
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500">Piece</label>
+                  <label className="text-xs font-medium text-gray-500">
+                    Piece
+                  </label>
                   <Input
                     type="number"
                     value={row.purchase_sub_piece}
-                    onChange={(e) => handlePaymentChange(e, index, "purchase_sub_piece")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "purchase_sub_piece")
+                    }
                   />
                 </div>
               )}
             </div>
 
             <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-              Current Stock: {row.stockData?.total_box || 0} Box / {row.stockData?.total_piece || 0} Piece
+              Current Stock: {row.stockData?.total_box || 0} Box /{" "}
+              {row.stockData?.total_piece || 0} Piece
             </div>
           </div>
         </div>

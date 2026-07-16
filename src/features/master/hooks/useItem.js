@@ -64,30 +64,65 @@ export const useItem = (itemId = null) => {
   }, [open, itemId, isEditMode, token, toast]);
 
   const handleInputChange = (field, value) => {
+    
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const response = isEditMode
-        ? await masterService.updateItem(itemId, formData, token)
-        : await masterService.createItem(formData, token);
+  // const handleSubmit = async (data) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = isEditMode
+  //       ? await masterService.updateItem(itemId, formData, token)
+  //       : await masterService.createItem(formData, token);
 
-      if (response?.data.code === 200) {
-        toast({ title: "Success", description: response.data.msg });
-        queryClient.invalidateQueries(["items"]);
-        setOpen(false);
-      } else {
-        toast({ title: "Error", description: response.data.msg, variant: "destructive" });
-      }
-    } catch (error) {
-      toast({ title: "Error", description: "Operation failed", variant: "destructive" });
-    } finally {
-      setIsLoading(false);
+  //     if (response?.data.code === 200) {
+  //       toast({ title: "Success", description: response.data.msg });
+  //       queryClient.invalidateQueries(["items"]);
+  //       setOpen(false);
+  //     } else {
+  //       toast({ title: "Error", description: response.data.msg, variant: "destructive" });
+  //     }
+  //   } catch (error) {
+  //     toast({ title: "Error", description: "Operation failed", variant: "destructive" });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+const handleSubmit = async (data) => {
+  setIsLoading(true);
+  try {
+    const response = isEditMode
+      ? await masterService.updateItem(itemId, data, token)
+      : await masterService.createItem(data, token);
+
+    if (response?.data.code === 200) {
+      toast({
+        title: "Success",
+        description: response.data.msg,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["items"],
+      });
+
+      setOpen(false);
+    } else {
+      toast({
+        title: "Error",
+        description: response.data.msg,
+        variant: "destructive",
+      });
     }
-  };
-
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Operation failed",
+      variant: "destructive",
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
   return {
     useItemsQuery,
     open,

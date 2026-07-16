@@ -9,7 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fetchBatchNoByItem, useFetchGoDown, useFetchItems } from "@/hooks/useApi";
+import {
+  fetchBatchNoByItem,
+  useFetchGoDown,
+  useFetchItems,
+} from "@/hooks/useApi";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -33,11 +37,12 @@ const QuotationFormTable = ({
     if (!itemId) return;
     try {
       const res = await fetchBatchNoByItem(itemId, token);
-      const batches = res?.batchNo?.map((b) => ({
-        value: b.purchase_sub_batch_no,
-        label: b.purchase_sub_batch_no,
-      })) || [];
-      setBatchOptions(prev => ({ ...prev, [rowIndex]: batches }));
+      const batches =
+        res?.batchNo?.map((b) => ({
+          value: b.purchase_sub_batch_no,
+          label: b.purchase_sub_batch_no,
+        })) || [];
+      setBatchOptions((prev) => ({ ...prev, [rowIndex]: batches }));
     } catch (err) {
       console.error("Batch fetch error:", err);
     }
@@ -50,11 +55,17 @@ const QuotationFormTable = ({
           <TableRow>
             {!isEdit && <TableHead className="w-[120px]">Barcode</TableHead>}
             <TableHead className="w-[200px]">Item*</TableHead>
-            {userbatch === "Yes" && <TableHead className="w-[150px]">Batch No*</TableHead>}
+            {userbatch === "Yes" && (
+              <TableHead className="w-[150px]">Batch No*</TableHead>
+            )}
             <TableHead className="w-[150px]">Godown*</TableHead>
             <TableHead className="w-[120px]">Rate*</TableHead>
-            {singlebranch === "Yes" && <TableHead className="w-[100px]">Box*</TableHead>}
-            {doublebranch === "Yes" && <TableHead className="w-[100px]">Piece*</TableHead>}
+            {singlebranch === "Yes" && (
+              <TableHead className="w-[100px]">Box*</TableHead>
+            )}
+            {doublebranch === "Yes" && (
+              <TableHead className="w-[100px]">Piece*</TableHead>
+            )}
             <TableHead className="w-[100px]">Stock</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -83,7 +94,12 @@ const QuotationFormTable = ({
                     handleTableChange(val, index, "quotation_sub_item_id");
                     handleBatchFetch(val, index);
                   }}
-                  options={itemsData?.items?.map(i => ({ value: i.id, label: i.item_name })) || []}
+                  options={
+                    itemsData?.items?.map((i) => ({
+                      value: i.id,
+                      label: i.item_name,
+                    })) || []
+                  }
                   placeholder="Select Item"
                 />
               </TableCell>
@@ -91,7 +107,9 @@ const QuotationFormTable = ({
                 <TableCell>
                   <MemoizedProductSelect
                     value={row.quotation_sub_batch_no}
-                    onChange={(val) => handleTableChange(val, index, "quotation_sub_batch_no")}
+                    onChange={(val) =>
+                      handleTableChange(val, index, "quotation_sub_batch_no")
+                    }
                     options={batchOptions[index] || []}
                     placeholder="Batch"
                   />
@@ -100,8 +118,15 @@ const QuotationFormTable = ({
               <TableCell>
                 <MemoizedProductSelect
                   value={row.quotation_sub_godown_id}
-                  onChange={(val) => handleTableChange(val, index, "quotation_sub_godown_id")}
-                  options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                  onChange={(val) =>
+                    handleTableChange(val, index, "quotation_sub_godown_id")
+                  }
+                  options={
+                    godownData?.godown?.map((g) => ({
+                      value: g.id,
+                      label: g.godown,
+                    })) || []
+                  }
                   placeholder="Godown"
                 />
               </TableCell>
@@ -109,7 +134,13 @@ const QuotationFormTable = ({
                 <Input
                   type="number"
                   value={row.quotation_sub_rate}
-                  onChange={(e) => handleTableChange(e.target.value, index, "quotation_sub_rate")}
+                  onChange={(e) =>
+                    handleTableChange(
+                      e.target.value,
+                      index,
+                      "quotation_sub_rate",
+                    )
+                  }
                   className="h-9"
                 />
               </TableCell>
@@ -118,7 +149,13 @@ const QuotationFormTable = ({
                   <Input
                     type="number"
                     value={row.quotation_sub_box}
-                    onChange={(e) => handleTableChange(e.target.value, index, "quotation_sub_box")}
+                    onChange={(e) =>
+                      handleTableChange(
+                        e.target.value,
+                        index,
+                        "quotation_sub_box",
+                      )
+                    }
                     className="h-9"
                   />
                 </TableCell>
@@ -128,16 +165,28 @@ const QuotationFormTable = ({
                   <Input
                     type="number"
                     value={row.quotation_sub_piece}
-                    onChange={(e) => handleTableChange(e.target.value, index, "quotation_sub_piece")}
+                    onChange={(e) =>
+                      handleTableChange(
+                        e.target.value,
+                        index,
+                        "quotation_sub_piece",
+                      )
+                    }
                     className="h-9"
                   />
                 </TableCell>
               )}
               <TableCell>
                 <div className="text-[10px] leading-tight">
-                  <div className="text-gray-500">Box: {row.stockData?.total_box || 0}</div>
-                  <div className="text-gray-500">Pcs: {row.stockData?.total_piece || 0}</div>
-                  <div className="font-bold text-blue-600">Tot: {row.stockData?.total || 0}</div>
+                  <div className="text-gray-500">
+                    Box: {row.stockData?.total_box || 0}
+                  </div>
+                  <div className="text-gray-500">
+                    Pcs: {row.stockData?.total_piece || 0}
+                  </div>
+                  <div className="font-bold text-blue-600">
+                    Tot: {row.stockData?.total || 0}
+                  </div>
                 </div>
               </TableCell>
               <TableCell>

@@ -24,7 +24,7 @@ export const DispatchFormTable = ({
   singlebranch,
   doublebranch,
   userbatch,
-  batchOptions
+  batchOptions,
 }) => {
   return (
     <div className="rounded-md border overflow-hidden">
@@ -32,13 +32,19 @@ export const DispatchFormTable = ({
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="w-12 text-center">#</TableHead>
-            <TableHead className="min-w-[200px]">Item <CreateItem /></TableHead>
+            <TableHead className="min-w-[200px]">
+              Item <CreateItem />
+            </TableHead>
             {userbatch === "Yes" && <TableHead>Batch No</TableHead>}
             <TableHead className="min-w-[150px]">Godown</TableHead>
             <TableHead>Stock</TableHead>
             <TableHead className="w-32">Rate</TableHead>
-            {singlebranch === "Yes" && <TableHead className="w-24">Box</TableHead>}
-            {doublebranch === "Yes" && <TableHead className="w-24">Piece</TableHead>}
+            {singlebranch === "Yes" && (
+              <TableHead className="w-24">Box</TableHead>
+            )}
+            {doublebranch === "Yes" && (
+              <TableHead className="w-24">Piece</TableHead>
+            )}
             <TableHead className="w-12"></TableHead>
           </TableRow>
         </TableHeader>
@@ -49,8 +55,15 @@ export const DispatchFormTable = ({
               <TableCell>
                 <MemoizedProductSelect
                   value={row.dispatch_sub_item_id}
-                  onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_item_id")}
-                  options={itemsData?.items?.map(i => ({ value: i.id, label: i.item_name })) || []}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "dispatch_sub_item_id")
+                  }
+                  options={
+                    itemsData?.items?.map((i) => ({
+                      value: i.id,
+                      label: i.item_name,
+                    })) || []
+                  }
                   placeholder="Select Item"
                 />
                 {row.item_size && (
@@ -63,7 +76,9 @@ export const DispatchFormTable = ({
                 <TableCell>
                   <MemoizedProductSelect
                     value={row.dispatch_sub_batch_no}
-                    onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_batch_no")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "dispatch_sub_batch_no")
+                    }
                     options={batchOptions[index] || []}
                     placeholder="Batch"
                   />
@@ -72,21 +87,31 @@ export const DispatchFormTable = ({
               <TableCell>
                 <MemoizedSelect
                   value={row.dispatch_sub_godown_id}
-                  onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_godown_id")}
-                  options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "dispatch_sub_godown_id")
+                  }
+                  options={
+                    godownData?.godown?.map((g) => ({
+                      value: g.id,
+                      label: g.godown,
+                    })) || []
+                  }
                   placeholder="Godown"
                 />
               </TableCell>
               <TableCell>
                 <div className="text-xs">
-                  {row.stockData?.total_box || 0} B / {row.stockData?.total_piece || 0} P
+                  {row.stockData?.total_box || 0} B /{" "}
+                  {row.stockData?.total_piece || 0} P
                 </div>
               </TableCell>
               <TableCell>
                 <Input
                   type="number"
                   value={row.dispatch_sub_rate}
-                  onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_rate")}
+                  onChange={(e) =>
+                    handlePaymentChange(e, index, "dispatch_sub_rate")
+                  }
                 />
               </TableCell>
               {singlebranch === "Yes" && (
@@ -94,7 +119,9 @@ export const DispatchFormTable = ({
                   <Input
                     type="number"
                     value={row.dispatch_sub_box}
-                    onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_box")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "dispatch_sub_box")
+                    }
                   />
                 </TableCell>
               )}
@@ -103,7 +130,9 @@ export const DispatchFormTable = ({
                   <Input
                     type="number"
                     value={row.dispatch_sub_piece}
-                    onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_piece")}
+                    onChange={(e) =>
+                      handlePaymentChange(e, index, "dispatch_sub_piece")
+                    }
                   />
                 </TableCell>
               )}
@@ -111,7 +140,11 @@ export const DispatchFormTable = ({
                 <div className="flex items-center gap-1">
                   {row.id ? (
                     userType == 2 && (
-                      <button type="button" onClick={() => handleDeleteRow(row.id)} className="text-red-500">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteRow(row.id)}
+                        className="text-red-500"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     )
