@@ -360,8 +360,8 @@ const PreBookingFormPage = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div className="min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+        <div className="min-w-0 ">
+          <h1 className="text-xl  md:text-2xl font-bold text-gray-900">
             {editId ? "Edit PreBooking" : "Create PreBooking"}
           </h1>
           <p className="text-sm text-gray-500">
@@ -425,7 +425,7 @@ const PreBookingFormPage = () => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 z-10 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
+        <div className="sticky bottom-0 z-0 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
           <Button
             type="button"
             variant="outline"

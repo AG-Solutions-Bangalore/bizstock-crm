@@ -90,7 +90,7 @@ export const masterService = {
     return apiClient.post(ITEM_CREATE, data, getHeaders(token));
   },
   updateItem: async (id, data, token) => {
-    return apiClient.put(`${ITEM_EDIT_SUMBIT}/${id}`, data, getHeaders(token));
+    return apiClient.post(`${ITEM_EDIT_SUMBIT}/${id}`, data, getHeaders(token));
   },
 
   // Team
