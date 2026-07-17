@@ -96,7 +96,7 @@ const InvoiceFormMobile = ({
                     <MemoizedSelect
                       value={row.invoice_sub_godown_id}
                       onChange={(val) => handleTableChange(val, index, "invoice_sub_godown_id")}
-                      options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                      options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown })) || []}
                     />
                   </div>
                   <div className="space-y-1">

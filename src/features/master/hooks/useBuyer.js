@@ -9,7 +9,13 @@ export const useBuyer = (buyerId = null) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const isEditMode = !!buyerId;
-
+const showValidationToast = (message) => {
+  toast({
+    title: "Validation Error",
+    description: message,
+    variant: "destructive",
+  });
+};
   // List Logic
   const useBuyersQuery = () => useQuery({
     queryKey: ["buyers"],
@@ -57,6 +63,9 @@ export const useBuyer = (buyerId = null) => {
   };
 
   const handleSubmit = async () => {
+     if (!formData.buyer_name?.trim()) {
+    return showValidationToast("Buyer Name is required.");
+  }
     setIsLoading(true);
     try {
       const response = isEditMode

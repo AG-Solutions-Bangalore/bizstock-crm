@@ -86,7 +86,7 @@ export const DispatchReturnFormMobile = ({
               <MemoizedSelect
                 value={row.dispatch_sub_godown_id}
                 onChange={(e) => handlePaymentChange(e, index, "dispatch_sub_godown_id")}
-                options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown })) || []}
                 placeholder="Select Godown"
               />
             </div>

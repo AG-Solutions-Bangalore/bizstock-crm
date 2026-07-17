@@ -30,6 +30,14 @@ const QuotationFormPage = () => {
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
   const userbatch = useSelector((state) => state.auth?.branch_batch);
 
+  const showValidationToast = (message) => {
+    toast({
+      variant: "destructive",
+      title: "Validation Error",
+      description: message,
+    });
+  };
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     quotation_date: moment().format("YYYY-MM-DD"),
@@ -159,6 +167,30 @@ const QuotationFormPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.quotation_date) {
+      return showValidationToast("Date is required.");
+    }
+    if (!formData.quotation_buyer_id) {
+      return showValidationToast("Buyer is required.");
+    }
+    if (!formData.quotation_ref_no) {
+      return showValidationToast("Reference Number is required.");
+    }
+
+    for (let i = 0; i < invoiceData.length; i++) {
+      const row = invoiceData[i];
+      if (!row.quotation_sub_item_id) {
+        return showValidationToast(`Please select an Item for row ${i + 1} in Items Details.`);
+      }
+      if (!row.quotation_sub_godown_id) {
+        return showValidationToast(`Please select a Godown for row ${i + 1} in Items Details.`);
+      }
+      if (row.quotation_sub_rate === "" || row.quotation_sub_rate === undefined || Number(row.quotation_sub_rate) <= 0) {
+        return showValidationToast(`Please enter a valid Rate greater than 0 for row ${i + 1} in Items Details.`);
+      }
+    }
+
     setIsLoading(true);
     try {
       const payload = { ...formData, quotation_product_data: invoiceData };

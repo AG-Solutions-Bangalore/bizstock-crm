@@ -52,7 +52,7 @@ export const DispatchFormMobile = ({
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-gray-500">
-                  Item
+                  Item<span className="text-red-500">*</span>
                 </label>
                 <CreateItem />
               </div>
@@ -104,7 +104,7 @@ export const DispatchFormMobile = ({
                 options={
                   godownData?.godown?.map((g) => ({
                     value: g.id,
-                    label: g.godown_name,
+                    label: g.godown,
                   })) || []
                 }
                 placeholder="Select Godown"

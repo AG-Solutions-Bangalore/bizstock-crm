@@ -57,6 +57,7 @@ const CreatePurchasePage = () => {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
   const boxInputRefs = useRef([]);
+  const [errors, setErrors] = useState({});
   const today = moment().format("YYYY-MM-DD");
 
   const [formData, setFormData] = useState({
@@ -67,6 +68,28 @@ const CreatePurchasePage = () => {
     purchase_remark: "",
     purchase_status: editId ? "" : null,
   });
+  const showValidationToast = (message) => {
+    toast({
+      variant: "destructive",
+      title: "Validation Error",
+      description: message,
+    });
+  };
+  // const validate = () => {
+  //   const newErrors = {};
+
+  //   if (!formData.purchase_date) newErrors.purchase_date = "Date is required";
+
+  //   if (!formData.purchase_buyer_id)
+  //     newErrors.purchase_buyer_id = "Buyer is required";
+
+  //   if (!formData.purchase_ref_no)
+  //     newErrors.purchase_ref_no = "Reference No is required";
+
+  //   setErrors(newErrors);
+
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const [invoiceData, setInvoiceData] = useState([
     {
@@ -260,6 +283,26 @@ const CreatePurchasePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.purchase_date) {
+      return showValidationToast("Purchase Date is required.");
+    }
+
+    if (!formData.purchase_buyer_id) {
+      return showValidationToast("Buyer is required.");
+    }
+
+    if (!formData.purchase_ref_no) {
+      return showValidationToast("Reference Number is required.");
+    }
+
+    // Validate that an item is selected for every row in Items Details
+    for (let i = 0; i < invoiceData.length; i++) {
+      if (!invoiceData[i].purchase_sub_item_id) {
+        return showValidationToast(`Please select an Item for row ${i + 1} in Items Details.`);
+      }
+    }
+
     setIsLoading(true);
     try {
       const payload = { ...formData, purchase_product_data: invoiceData };

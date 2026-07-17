@@ -33,7 +33,10 @@ export const DispatchFormTable = ({
           <TableRow>
             <TableHead className="w-12 text-center">#</TableHead>
             <TableHead className="min-w-[200px]">
-              Item <CreateItem />
+              <div className="flex items-center gap-2">
+                <span>Item<span className="text-red-500">*</span></span>
+                <CreateItem />
+              </div>
             </TableHead>
             {userbatch === "Yes" && <TableHead>Batch No</TableHead>}
             <TableHead className="min-w-[150px]">Godown</TableHead>

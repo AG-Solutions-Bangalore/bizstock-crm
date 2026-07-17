@@ -104,6 +104,9 @@ const handleSubmit = async (data) => {
       queryClient.invalidateQueries({
         queryKey: ["items"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch-items"],
+      });
 
       setOpen(false);
     } else {

@@ -57,7 +57,7 @@ export const PurchaseFormMobile = ({
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-gray-500">
-                  Item
+                  Item<span className="text-red-500">*</span>
                 </label>
                 <CreateItem />
               </div>

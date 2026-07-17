@@ -115,7 +115,7 @@ const QuotationFormMobile = ({
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-gray-400 uppercase">
-                      Godown
+                      Godown*
                     </label>
                     <MemoizedSelect
                       value={row.quotation_sub_godown_id}
@@ -132,7 +132,7 @@ const QuotationFormMobile = ({
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-gray-400 uppercase">
-                      Rate
+                      Rate*
                     </label>
                     <Input
                       type="number"
