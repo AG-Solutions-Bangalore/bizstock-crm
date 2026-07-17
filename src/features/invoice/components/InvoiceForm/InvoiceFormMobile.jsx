@@ -6,6 +6,7 @@ import { MemoizedSelect } from "@/components/common/MemoizedSelect";
 import { MemoizedProductSelect } from "@/components/common/MemoizedProductSelect";
 import { useFetchBuyers, useFetchItems, useFetchGoDown } from "@/hooks/useApi";
 import { useNavigate } from "react-router-dom";
+import CreateItem from "@/features/master/components/item/ItemFormDialog";
 
 const InvoiceFormMobile = ({
   formData,
@@ -83,6 +84,12 @@ const InvoiceFormMobile = ({
               </button>
 
               <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-gray-500">
+                    Item<span className="text-red-500">*</span>
+                  </label>
+                  <CreateItem />
+                </div>
                 <MemoizedProductSelect
                   value={row.invoice_sub_item_id}
                   onChange={(val) => handleTableChange(val, index, "invoice_sub_item_id")}

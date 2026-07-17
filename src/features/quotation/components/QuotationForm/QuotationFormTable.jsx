@@ -16,6 +16,7 @@ import {
 } from "@/hooks/useApi";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import { useState } from "react";
+import CreateItem from "@/features/master/components/item/ItemFormDialog";
 
 const QuotationFormTable = ({
   invoiceData,
@@ -54,7 +55,12 @@ const QuotationFormTable = ({
         <TableHeader className="bg-yellow-50">
           <TableRow>
             {!isEdit && <TableHead className="w-[120px]">Barcode</TableHead>}
-            <TableHead className="w-[200px]">Item*</TableHead>
+            <TableHead className="w-[200px]">
+              <div className="flex items-center gap-2">
+                <span>Item<span className="text-red-500">*</span></span>
+                <CreateItem />
+              </div>
+            </TableHead>
             {userbatch === "Yes" && (
               <TableHead className="w-[150px]">Batch No*</TableHead>
             )}
