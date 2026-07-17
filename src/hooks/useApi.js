@@ -37,7 +37,7 @@ export const useFetchCategory = () => {
   return useQuery(createQueryConfig(["categorys"], "/categorys"));
 };
 export const useFetchItems = () => {
-  return useQuery(createQueryConfig(["items"], "/items"));
+  return useQuery(createQueryConfig(["fetch-items"], "/items"));
 };
 export const useFetchGoDown = () => {
   return useQuery(createQueryConfig(["godown"], "/godown"));

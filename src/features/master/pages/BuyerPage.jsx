@@ -31,25 +31,29 @@ import { useBuyer } from "../hooks/useBuyer";
 
 const BuyerPage = () => {
   const { useBuyersQuery } = useBuyer();
-  const { data: buyers, isLoading, isError } = useBuyersQuery();
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
+  const { data, isLoading, isError } = useBuyersQuery();
+  const buyersArray = Array.isArray(data) ? data : (data?.buyers || []);
 
   const columns = [
     {
       accessorKey: "index",
       header: "#",
       cell: ({ row }) => row.index + 1,
+      enableGlobalFilter: false,
     },
     {
       accessorKey: "buyer_name",
       header: "Buyer Name",
       cell: ({ row }) => (
-        <div className="font-medium text-yellow-900">{row.getValue("buyer_name")}</div>
+        <div className="font-medium text-yellow-900">
+          {row.getValue("buyer_name")}
+        </div>
       ),
     },
     {
@@ -62,15 +66,27 @@ const BuyerPage = () => {
       cell: ({ row }) => {
         const type = row.getValue("buyer_type");
         const typeMap = { 1: "Buyer", 2: "Vendor" };
-        const labels = Array.isArray(type) 
-          ? type.map(t => typeMap[t] || t) 
-          : String(type).split(",").map(t => typeMap[t.trim()] || t);
+        const labels = Array.isArray(type)
+          ? type.map((t) => typeMap[t] || t)
+          : String(type)
+              .split(",")
+              .map((t) => typeMap[t.trim()] || t);
         return (
           <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             {labels.join(", ")}
           </span>
         );
-      }
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const type = row.getValue(columnId);
+        const typeMap = { 1: "Buyer", 2: "Vendor" };
+        const labels = Array.isArray(type)
+          ? type.map((t) => typeMap[t] || t)
+          : String(type)
+              .split(",")
+              .map((t) => typeMap[t.trim()] || t);
+        return labels.join(", ").toLowerCase().includes(filterValue.toLowerCase());
+      },
     },
     {
       accessorKey: "buyer_status",
@@ -78,7 +94,9 @@ const BuyerPage = () => {
       cell: ({ row }) => {
         const status = row.getValue("buyer_status");
         return (
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${status === "Active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
+          >
             {status}
           </span>
         );
@@ -88,11 +106,36 @@ const BuyerPage = () => {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => <BuyerFormDialog buyerId={row.original.id} />,
+      enableGlobalFilter: false,
     },
   ];
 
+  const globalFilterFn = (row, columnId, filterValue) => {
+    const search = filterValue.toLowerCase();
+    const name = String(row.getValue("buyer_name") ?? "").toLowerCase();
+    const city = String(row.getValue("buyer_city") ?? "").toLowerCase();
+    const status = String(row.getValue("buyer_status") ?? "").toLowerCase();
+    
+    // Handle buyer_type which can be an array of numbers
+    const type = row.getValue("buyer_type");
+    const typeMap = { 1: "Buyer", 2: "Vendor" };
+    const typeStr = Array.isArray(type)
+      ? type.map((t) => typeMap[t] || t).join(", ")
+      : String(type ?? "")
+          .split(",")
+          .map((t) => typeMap[t.trim()] || t)
+          .join(", ");
+
+    return (
+      name.includes(search) ||
+      city.includes(search) ||
+      status.includes(search) ||
+      typeStr.toLowerCase().includes(search)
+    );
+  };
+
   const table = useReactTable({
-    data: buyers || [],
+    data: buyersArray,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -102,6 +145,7 @@ const BuyerPage = () => {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    globalFilterFn,
     state: {
       sorting,
       columnFilters,
@@ -113,7 +157,8 @@ const BuyerPage = () => {
   });
 
   if (isLoading) return <Loader />;
-  if (isError) return <div className="p-4 text-red-500">Error loading buyers.</div>;
+  if (isError)
+    return <div className="p-4 text-red-500">Error loading buyers.</div>;
 
   return (
     <div className="w-full space-y-4 animate-in fade-in duration-500">
@@ -127,7 +172,9 @@ const BuyerPage = () => {
       <Card className="border-yellow-100 shadow-sm overflow-hidden">
         <CardHeader className="bg-yellow-50/50 pb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle className="text-lg font-semibold text-yellow-900">Buyer List</CardTitle>
+            <CardTitle className="text-lg font-semibold text-yellow-900">
+              Buyer List
+            </CardTitle>
             <div className="flex items-center gap-2">
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-yellow-600" />
@@ -148,8 +195,16 @@ const BuyerPage = () => {
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} className="text-yellow-900 font-semibold">
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      <TableHead
+                        key={header.id}
+                        className="text-yellow-900 font-semibold"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -158,17 +213,26 @@ const BuyerPage = () => {
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} className="hover:bg-yellow-50/30 transition-colors">
+                    <TableRow
+                      key={row.id}
+                      className="hover:bg-yellow-50/30 transition-colors"
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center text-gray-500"
+                    >
                       No buyers found.
                     </TableCell>
                   </TableRow>

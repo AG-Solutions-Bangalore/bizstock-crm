@@ -273,8 +273,33 @@ const CreateDispatchReturnPage = () => {
     setFormData(updatedFormData);
   };
 
+  const showValidationToast = (message) => {
+    toast({
+      variant: "destructive",
+      title: "Validation Error",
+      description: message,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.dispatch_date) {
+      return showValidationToast("Date is required.");
+    }
+    if (!formData.dispatch_buyer_id) {
+      return showValidationToast("Buyer is required.");
+    }
+    if (!formData.dispatch_ref_no) {
+      return showValidationToast("Reference Number is required.");
+    }
+
+    for (let i = 0; i < invoiceData.length; i++) {
+      if (!invoiceData[i].dispatch_sub_item_id) {
+        return showValidationToast(`Please select an Item for row ${i + 1} in Items Details.`);
+      }
+    }
+
     setIsLoading(true);
     try {
       const payload = { ...formData, dispatch_product_data: invoiceData };

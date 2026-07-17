@@ -47,12 +47,20 @@ const CreatePurchaseReturnPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const token = usetoken();
-  
+
+  const showValidationToast = (message) => {
+    toast({
+      variant: "destructive",
+      title: "Validation Error",
+      description: message,
+    });
+  };
+
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
   const userType = useSelector((state) => state.auth.user_type);
   const userbatch = useSelector((state) => state.auth?.branch_batch);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
@@ -101,8 +109,9 @@ const CreatePurchaseReturnPage = () => {
   const { data: buyerData, isLoading: loadingbuyer } = useFetchBuyers();
   const { data: itemsData, isLoading: loadingitem } = useFetchItems();
   const { data: godownData, isLoading: loadinggodown } = useFetchGoDown();
-  const { data: purchaseRef, isLoading: loadingref } = useFetchPurchaseReturnRef();
-
+  const { data: purchaseRef, isLoading: loadingref } =
+    useFetchPurchaseReturnRef();
+  console.log(godownData);
   useEffect(() => {
     if (editId && purchaseByid?.purchase) {
       setFormData({
@@ -145,11 +154,14 @@ const CreatePurchaseReturnPage = () => {
     ]);
   }, []);
 
-  const removeRow = useCallback((index) => {
-    if (invoiceData.length > 1) {
-      setInvoiceData((prev) => prev.filter((_, i) => i !== index));
-    }
-  }, [invoiceData.length]);
+  const removeRow = useCallback(
+    (index) => {
+      if (invoiceData.length > 1) {
+        setInvoiceData((prev) => prev.filter((_, i) => i !== index));
+      }
+    },
+    [invoiceData.length],
+  );
 
   const fetchAndSetStock = async (rowIndex, itemId, godownId) => {
     if (!itemId || !godownId) return;
@@ -159,16 +171,28 @@ const CreatePurchaseReturnPage = () => {
       const itemPiece = Number(stock?.item_piece || 1);
       const safeNumber = (val) => Number(val) || 0;
 
-      const openingPurch = safeNumber(stock?.openpurch) * itemPiece + safeNumber(stock?.openpurch_piece);
-      const openingSale = safeNumber(stock?.closesale) * itemPiece + safeNumber(stock?.closesale_piece);
-      const openingPurchR = safeNumber(stock?.openpurchR) * itemPiece + safeNumber(stock?.openpurchR_piece);
-      const openingSaleR = safeNumber(stock?.closesaleR) * itemPiece + safeNumber(stock?.closesaleR_piece);
+      const openingPurch =
+        safeNumber(stock?.openpurch) * itemPiece +
+        safeNumber(stock?.openpurch_piece);
+      const openingSale =
+        safeNumber(stock?.closesale) * itemPiece +
+        safeNumber(stock?.closesale_piece);
+      const openingPurchR =
+        safeNumber(stock?.openpurchR) * itemPiece +
+        safeNumber(stock?.openpurchR_piece);
+      const openingSaleR =
+        safeNumber(stock?.closesaleR) * itemPiece +
+        safeNumber(stock?.closesaleR_piece);
       const opening = openingPurch - openingSale - openingPurchR + openingSaleR;
 
-      const purchase = safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
-      const purchaseR = safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
-      const sale = safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
-      const saleR = safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
+      const purchase =
+        safeNumber(stock?.purch) * itemPiece + safeNumber(stock?.purch_piece);
+      const purchaseR =
+        safeNumber(stock?.purchR) * itemPiece + safeNumber(stock?.purchR_piece);
+      const sale =
+        safeNumber(stock?.sale) * itemPiece + safeNumber(stock?.sale_piece);
+      const saleR =
+        safeNumber(stock?.saleR) * itemPiece + safeNumber(stock?.saleR_piece);
 
       const total = opening + purchase - purchaseR - sale + saleR;
       const totalBox = Math.floor(total / itemPiece);
@@ -177,7 +201,11 @@ const CreatePurchaseReturnPage = () => {
       setInvoiceData((prev) => {
         const newData = [...prev];
         if (newData[rowIndex]) {
-          newData[rowIndex].stockData = { total, total_box: totalBox, total_piece: totalPiece };
+          newData[rowIndex].stockData = {
+            total,
+            total_box: totalBox,
+            total_piece: totalPiece,
+          };
         }
         return newData;
       });
@@ -200,22 +228,31 @@ const CreatePurchaseReturnPage = () => {
 
       try {
         const res = await fetchBatchNoByItem(value, token);
-        const batches = res?.batchNo?.map((batch) => ({
-          value: batch.purchase_sub_batch_no,
-          label: batch.purchase_sub_batch_no,
-        })) || [];
+        const batches =
+          res?.batchNo?.map((batch) => ({
+            value: batch.purchase_sub_batch_no,
+            label: batch.purchase_sub_batch_no,
+          })) || [];
         setBatchOptions((prev) => ({ ...prev, [rowIndex]: batches }));
       } catch (err) {
         console.error("Batch fetch error:", err);
       }
 
       if (updatedData[rowIndex].purchase_sub_godown_id) {
-        fetchAndSetStock(rowIndex, value, updatedData[rowIndex].purchase_sub_godown_id);
+        fetchAndSetStock(
+          rowIndex,
+          value,
+          updatedData[rowIndex].purchase_sub_godown_id,
+        );
       }
     } else if (fieldName === "purchase_sub_godown_id") {
       updatedData[rowIndex][fieldName] = value;
       if (updatedData[rowIndex].purchase_sub_item_id) {
-        fetchAndSetStock(rowIndex, updatedData[rowIndex].purchase_sub_item_id, value);
+        fetchAndSetStock(
+          rowIndex,
+          updatedData[rowIndex].purchase_sub_item_id,
+          value,
+        );
       }
     } else {
       updatedData[rowIndex][fieldName] = value;
@@ -230,10 +267,34 @@ const CreatePurchaseReturnPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.purchase_date) {
+      return showValidationToast("Purchase Return Date is required.");
+    }
+
+    if (!formData.purchase_buyer_id) {
+      return showValidationToast("Buyer is required.");
+    }
+
+    if (!formData.purchase_ref_no) {
+      return showValidationToast("Reference Number is required.");
+    }
+
+    // Validate that an item is selected for every row in Items Details
+    for (let i = 0; i < invoiceData.length; i++) {
+      if (!invoiceData[i].purchase_sub_item_id) {
+        return showValidationToast(
+          `Please select an Item for row ${i + 1} in Items Details.`,
+        );
+      }
+    }
+
     setIsLoading(true);
     try {
       const payload = { ...formData, purchase_product_data: invoiceData };
-      const url = editId ? `${PURCHASE_RETURN_EDIT_LIST}/${decryptedId}` : PURCHASE_RETURN_CREATE;
+      const url = editId
+        ? `${PURCHASE_RETURN_EDIT_LIST}/${decryptedId}`
+        : PURCHASE_RETURN_CREATE;
       const method = editId ? "put" : "post";
 
       const response = await apiClient[method](url, payload, {
@@ -243,12 +304,17 @@ const CreatePurchaseReturnPage = () => {
         toast({ title: "Success", description: response.data.msg });
         navigate("/purchase-return");
       } else {
-        toast({ title: "Error", description: response.data.msg, variant: "destructive" });
+        toast({
+          title: "Error",
+          description: response.data.msg,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: error?.response?.data?.message || "Failed to save purchase return",
+        description:
+          error?.response?.data?.message || "Failed to save purchase return",
         variant: "destructive",
       });
     } finally {
@@ -263,24 +329,39 @@ const CreatePurchaseReturnPage = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await apiClient.delete(`${PURCHASE_RETURN_SUB_DELETE}/${deleteItemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient.delete(
+        `${PURCHASE_RETURN_SUB_DELETE}/${deleteItemId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (response.data.code === 200) {
         toast({ title: "Success", description: response.data.msg });
         setInvoiceData((prev) => prev.filter((row) => row.id !== deleteItemId));
       }
     } catch (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setDeleteConfirmOpen(false);
       setDeleteItemId(null);
     }
   };
 
-  if (isFetching || loadingbuyer || loadingitem || loadinggodown || loadingref) {
+  if (
+    isFetching ||
+    loadingbuyer ||
+    loadingitem ||
+    loadinggodown ||
+    loadingref
+  ) {
     return (
-      <div className="flex justify-center items-center h-full"><Loader /></div>
+      <div className="flex justify-center items-center h-full">
+        <Loader />
+      </div>
     );
   }
 
@@ -361,7 +442,7 @@ const CreatePurchaseReturnPage = () => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 z-10 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
+        <div className="sticky bottom-0 z-0 flex flex-col-reverse gap-2 border-t border-gray-200 bg-white/95 p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] backdrop-blur sm:flex-row sm:justify-end md:rounded-lg md:border md:px-4">
           <Button
             type="button"
             variant="outline"
@@ -385,11 +466,18 @@ const CreatePurchaseReturnPage = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>This will permanently delete this item from the return.</AlertDialogDescription>
+            <AlertDialogDescription>
+              This will permanently delete this item from the return.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

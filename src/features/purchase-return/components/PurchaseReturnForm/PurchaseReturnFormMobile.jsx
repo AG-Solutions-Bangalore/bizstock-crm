@@ -54,7 +54,7 @@ export const PurchaseReturnFormMobile = ({
           <div className="space-y-3">
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium text-gray-500">Item</label>
+                <label className="text-xs font-medium text-gray-500">Item<span className="text-red-500">*</span></label>
                 <CreateItem />
               </div>
               <MemoizedProductSelect
@@ -87,7 +87,7 @@ export const PurchaseReturnFormMobile = ({
               <MemoizedSelect
                 value={row.purchase_sub_godown_id}
                 onChange={(e) => handlePaymentChange(e, index, "purchase_sub_godown_id")}
-                options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown })) || []}
                 placeholder="Select Godown"
               />
             </div>

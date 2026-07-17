@@ -15,6 +15,8 @@ import { useFetchItems, useFetchGoDown, fetchBatchNoByItem } from "@/hooks/useAp
 import { fetchDispatchInvoiceById } from "@/api";
 import { useQuery } from "@tanstack/react-query";
 
+import CreateItem from "@/features/master/components/item/ItemFormDialog";
+
 const InvoiceFormTable = ({
   invoiceData,
   handleTableChange,
@@ -57,7 +59,12 @@ const InvoiceFormTable = ({
         <TableHeader className="bg-yellow-50">
           <TableRow>
             <TableHead className="w-[180px]">Ref No*</TableHead>
-            <TableHead className="w-[200px]">Item*</TableHead>
+            <TableHead className="w-[200px]">
+              <div className="flex items-center gap-2">
+                <span>Item<span className="text-red-500">*</span></span>
+                <CreateItem />
+              </div>
+            </TableHead>
             {userbatch === "Yes" && <TableHead className="w-[150px]">Batch No*</TableHead>}
             <TableHead className="w-[150px]">Godown*</TableHead>
             {singlebranch === "Yes" && <TableHead className="w-[100px]">Box*</TableHead>}
@@ -103,7 +110,7 @@ const InvoiceFormTable = ({
                 <MemoizedProductSelect
                   value={row.invoice_sub_godown_id}
                   onChange={(val) => handleTableChange(val, index, "invoice_sub_godown_id")}
-                  options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown_name })) || []}
+                  options={godownData?.godown?.map(g => ({ value: g.id, label: g.godown })) || []}
                   placeholder="Godown"
                 />
               </TableCell>

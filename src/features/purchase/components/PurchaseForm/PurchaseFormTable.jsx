@@ -35,7 +35,7 @@ export const PurchaseFormTable = ({
             <TableHead className="w-12 text-center">#</TableHead>
             <TableHead className="min-w-[260px]">
               <div className="flex items-center gap-2">
-                <span>Item</span>
+                <span>Item<span className="text-red-500">*</span></span>
                 <CreateItem />
               </div>
             </TableHead>
