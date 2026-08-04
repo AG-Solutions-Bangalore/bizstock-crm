@@ -21,7 +21,7 @@ import { useItem } from "../../hooks/useItem";
 import { useCategory } from "../../hooks/useCategory";
 import { ButtonConfig } from "@/config/ButtonConfig";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const ItemFormDialog = ({ itemId }) => {
@@ -42,6 +42,17 @@ const ItemFormDialog = ({ itemId }) => {
   const branchUnit = useSelector((state) => state.auth.branch_d_unit);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [otherImageFile, setOtherImageFile] = useState(null);
+  const [otherImagePreview, setOtherImagePreview] = useState(null);
+
+  useEffect(() => {
+    if (!open) {
+      setImageFile(null);
+      setImagePreview(null);
+      setOtherImageFile(null);
+      setOtherImagePreview(null);
+    }
+  }, [open]);
   const showValidationToast = (message) => {
     toast({
       variant: "destructive",
@@ -104,6 +115,14 @@ const ItemFormDialog = ({ itemId }) => {
 
     if (imageFile) {
       data.append("item_image", imageFile); // Binary file
+    } else if (formData.item_image) {
+      data.append("item_image", formData.item_image);
+    }
+
+    if (otherImageFile) {
+      data.append("item_other_image", otherImageFile); // Binary file
+    } else if (formData.item_other_image) {
+      data.append("item_other_image", formData.item_other_image);
     }
 
     handleSubmit(data);
@@ -286,15 +305,53 @@ const ItemFormDialog = ({ itemId }) => {
                       className="flex-1"
                     />
 
-                    {(imagePreview || formData.item_image) && (
-                      <img
-                        src={
-                          imagePreview || `${IMAGE_URL}/${formData.item_image}`
+                    <img
+                      src={
+                        imagePreview || 
+                        (formData.item_image ? `${IMAGE_URL}/${formData.item_image}` : NO_IMAGE_URL)
+                      }
+                      alt="Preview"
+                      className="h-20 w-20 rounded border object-cover shrink-0"
+                      onError={(e) => { e.target.src = NO_IMAGE_URL; }}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">Other Image</label>
+
+                  <div className="flex items-start gap-4">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+
+                        if (file) {
+                          setOtherImageFile(file);
+
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setOtherImagePreview(reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          setOtherImageFile(null);
+                          setOtherImagePreview(null);
                         }
-                        alt="Preview"
-                        className="h-20 w-20 rounded border object-cover shrink-0"
-                      />
-                    )}
+                      }}
+                      className="flex-1"
+                    />
+
+                    <img
+                      src={
+                        otherImagePreview || 
+                        (formData.item_other_image ? `${IMAGE_URL}/${formData.item_other_image}` : NO_IMAGE_URL)
+                      }
+                      alt="Other Preview"
+                      className="h-20 w-20 rounded border object-cover shrink-0"
+                      onError={(e) => { e.target.src = NO_IMAGE_URL; }}
+                    />
                   </div>
                 </div>
               </div>

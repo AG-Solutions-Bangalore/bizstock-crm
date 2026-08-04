@@ -58,6 +58,9 @@ export const masterService = {
     return apiClient.post(CATEGORY_CREATE, data, getHeaders(token));
   },
   updateCategory: async (id, data, token) => {
+    if (data instanceof FormData) {
+      return apiClient.post(`${CATEGORY_UPDATE}/${id}`, data, getHeaders(token));
+    }
     return apiClient.put(`${CATEGORY_UPDATE}/${id}`, data, getHeaders(token));
   },
 

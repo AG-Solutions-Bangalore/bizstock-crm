@@ -21,7 +21,9 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import Loader from "@/components/loader/Loader";
 import CategoryFormDialog from "../components/category/CategoryFormDialog";
+import CategoryViewDialog from "../components/category/CategoryViewDialog";
 import { useCategory } from "../hooks/useCategory";
+import { CATEGORY_IMAGE_URL, NO_IMAGE_URL } from "@/config/BaseUrl";
 
 const CategoryPage = () => {
   const { useCategoriesQuery } = useCategory();
@@ -35,6 +37,23 @@ const CategoryPage = () => {
       accessorKey: "index",
       header: "#",
       cell: ({ row }) => row.index + 1,
+    },
+    {
+      accessorKey: "category_image",
+      header: "Image",
+      cell: ({ row }) => {
+        const image = row.getValue("category_image");
+        return (
+          <img
+            src={image ? `${CATEGORY_IMAGE_URL}/${image}` : NO_IMAGE_URL}
+            alt={row.getValue("category")}
+            className="h-10 w-10 rounded border object-cover shadow-sm bg-gray-50"
+            onError={(e) => {
+              e.target.src = NO_IMAGE_URL;
+            }}
+          />
+        );
+      },
     },
     {
       accessorKey: "category",
@@ -56,7 +75,12 @@ const CategoryPage = () => {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => <CategoryFormDialog categoryId={row.original.id} />,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <CategoryViewDialog category={row.original} />
+          <CategoryFormDialog categoryId={row.original.id} />
+        </div>
+      ),
     },
   ];
 

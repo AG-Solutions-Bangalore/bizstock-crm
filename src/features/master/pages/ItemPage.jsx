@@ -21,7 +21,9 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import Loader from "@/components/loader/Loader";
 import ItemFormDialog from "../components/item/ItemFormDialog";
+import ItemViewDialog from "../components/item/ItemViewDialog";
 import { useItem } from "../hooks/useItem";
+import { IMAGE_URL, NO_IMAGE_URL } from "@/config/BaseUrl";
 
 const ItemPage = () => {
   const { useItemsQuery } = useItem();
@@ -35,6 +37,34 @@ const ItemPage = () => {
       accessorKey: "index",
       header: "#",
       cell: ({ row }) => row.index + 1,
+    },
+    {
+      accessorKey: "item_image",
+      header: "Images",
+      cell: ({ row }) => {
+        const img1 = row.original.item_image;
+        const img2 = row.original.item_other_image;
+        return (
+          <div className="flex items-center gap-1">
+            <img
+              src={img1 ? `${IMAGE_URL}/${img1}` : NO_IMAGE_URL}
+              alt={row.original.item_name}
+              className="h-10 w-10 rounded border object-cover shadow-sm bg-gray-50 shrink-0"
+              onError={(e) => {
+                e.target.src = NO_IMAGE_URL;
+              }}
+            />
+            <img
+              src={img2 ? `${IMAGE_URL}/${img2}` : NO_IMAGE_URL}
+              alt={`${row.original.item_name} secondary`}
+              className="h-10 w-10 rounded border object-cover shadow-sm bg-gray-50 shrink-0"
+              onError={(e) => {
+                e.target.src = NO_IMAGE_URL;
+              }}
+            />
+          </div>
+        );
+      },
     },
     {
       accessorKey: "item_name",
@@ -71,7 +101,12 @@ const ItemPage = () => {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }) => <ItemFormDialog itemId={row.original.id} />,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <ItemViewDialog item={row.original} />
+          <ItemFormDialog itemId={row.original.id} />
+        </div>
+      ),
     },
   ];
 

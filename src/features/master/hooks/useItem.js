@@ -30,6 +30,7 @@ export const useItem = (itemId = null) => {
     item_minimum_stock: "",
     item_surface: "",
     item_image: "",
+    item_other_image: "",
     item_status: isEditMode ? "" : "Active",
   });
 
@@ -50,6 +51,7 @@ export const useItem = (itemId = null) => {
             item_minimum_stock: item.item_minimum_stock || "",
             item_surface: item.item_surface || "",
             item_image: item.item_image || "",
+            item_other_image: item.item_other_image || "",
             item_status: item.item_status || "Active",
           });
         } catch (err) {

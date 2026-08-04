@@ -22,6 +22,7 @@ export const useCategory = (categoryId = null) => {
   const [formData, setFormData] = useState({
     category: "",
     category_status: "Active",
+    category_image: "",
   });
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export const useCategory = (categoryId = null) => {
           setFormData({
             category: category.category || "",
             category_status: category.category_status || "Active",
+            category_image: category.category_image || "",
           });
         } catch (err) {
           toast({ title: "Error", description: "Failed to fetch category details", variant: "destructive" });
@@ -49,7 +51,7 @@ export const useCategory = (categoryId = null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data) => {
     if (!formData.category) {
       toast({ title: "Validation Error", description: "Category name is required", variant: "destructive" });
       return;
@@ -58,12 +60,12 @@ export const useCategory = (categoryId = null) => {
     setIsLoading(true);
     try {
       const response = isEditMode
-        ? await masterService.updateCategory(categoryId, formData, token)
-        : await masterService.createCategory(formData, token);
+        ? await masterService.updateCategory(categoryId, data || formData, token)
+        : await masterService.createCategory(data || formData, token);
 
       if (response?.data.code === 200) {
         toast({ title: "Success", description: response.data.msg });
-        queryClient.invalidateQueries(["categories"]);
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
         setOpen(false);
       } else {
         toast({ title: "Error", description: response.data.msg, variant: "destructive" });
