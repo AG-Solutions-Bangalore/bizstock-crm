@@ -79,6 +79,11 @@ export const PurchaseReturnFormMobile = ({
                   options={batchOptions[index] || []}
                   placeholder="Select Batch"
                 />
+                {row.purchase_sub_batch_no && (
+                  <div className="text-[10px] text-gray-500">
+                    Batch No: {row.purchase_sub_batch_no}
+                  </div>
+                )}
               </div>
             )}
 

@@ -119,6 +119,11 @@ const QuotationFormTable = ({
                     options={batchOptions[index] || []}
                     placeholder="Batch"
                   />
+                  {row.quotation_sub_batch_no && (
+                    <div className="text-[10px] mt-1 text-gray-500">
+                      Batch No: {row.quotation_sub_batch_no}
+                    </div>
+                  )}
                 </TableCell>
               )}
               <TableCell>

@@ -172,15 +172,33 @@ const StockBatchTable = ({ data, range, containerRef, formData }) => {
         <tbody>
           {filteredData.map((buyer, index) => {
             const itemPiece = Number(buyer.item_piece) || 1;
+
+            const openingPurch =
+              Number(buyer.openpurch) * itemPiece +
+              Number(buyer.openpurch_piece);
+            const openingSale =
+              Number(buyer.closesale) * itemPiece +
+              Number(buyer.closesale_piece);
+            const openingPurchR =
+              Number(buyer.openpurchR) * itemPiece +
+              Number(buyer.openpurchR_piece);
+            const openingSaleR =
+              Number(buyer.closesaleR) * itemPiece +
+              Number(buyer.closesaleR_piece);
+
             const opening =
-              Number(buyer.openpurch || 0) * itemPiece +
-              Number(buyer.openpurch_piece || 0) -
-              (Number(buyer.closesale || 0) * itemPiece +
-                Number(buyer.closesale_piece || 0)) -
-              (Number(buyer.openpurchR || 0) * itemPiece +
-                Number(buyer.openpurchR_piece || 0)) +
-              (Number(buyer.closesaleR || 0) * itemPiece +
-                Number(buyer.closesaleR_piece || 0));
+              openingPurch - openingSale - openingPurchR + openingSaleR;
+
+
+            // const opening =
+            //   Number(buyer.openpurch || 0) * itemPiece +
+            //   Number(buyer.openpurch_piece || 0) -
+            //   (Number(buyer.closesale || 0) * itemPiece +
+            //     Number(buyer.closesale_piece || 0)) -
+            //   (Number(buyer.openpurchR || 0) * itemPiece +
+            //     Number(buyer.openpurchR_piece || 0)) +
+            //   (Number(buyer.closesaleR || 0) * itemPiece +
+            //     Number(buyer.closesaleR_piece || 0));
             const purchase =
               Number(buyer.purch || 0) * itemPiece +
               Number(buyer.purch_piece || 0);
@@ -193,7 +211,7 @@ const StockBatchTable = ({ data, range, containerRef, formData }) => {
             const saleR =
               Number(buyer.saleR || 0) * itemPiece +
               Number(buyer.saleR_piece || 0);
-            const total = opening + (purchase - purchaseR) - (sale - saleR);
+            const total = opening + purchase - purchaseR - sale + saleR;
 
             if (singlebranch === "Yes" && doublebranch === "Yes") {
               const bps = [

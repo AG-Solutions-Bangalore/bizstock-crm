@@ -144,7 +144,7 @@ export default function DashboardLayout({ children }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on :18/09/2025
+                      Updated on : 19/11/2026
                     </span>
                   </div>
                 </div>

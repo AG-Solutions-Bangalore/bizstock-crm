@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import usetoken from "@/api/usetoken";
+import { navigateToQuotationEdit } from "@/api";
 import { ButtonConfig } from "@/config/ButtonConfig";
 import { QuotationMobileList } from "../components/QuotationList/QuotationMobileList";
 import { QuotationTable } from "../components/QuotationList/QuotationTable";
@@ -114,7 +115,7 @@ const QuotationListPage = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={() => navigate(`/quotation/form/${row.original.id}`)}>
+                  <Button variant="ghost" size="icon" onClick={() => navigateToQuotationEdit(navigate, row.original.id)}>
                     <Edit className="h-4 w-4 text-blue-500" />
                   </Button>
                 </TooltipTrigger>

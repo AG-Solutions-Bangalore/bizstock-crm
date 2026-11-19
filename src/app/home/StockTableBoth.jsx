@@ -322,6 +322,7 @@ function StockTableBoth({
                   const minimumBox = Math.round(minimumStock / itemPiece);
                   const minimumPiece = minimumStock % itemPiece;
 
+                  
                   if (total < Number(item.item_minimum_stock)) {
                     const box = Math.round(total / itemPiece);
                     const piece = total % itemPiece;

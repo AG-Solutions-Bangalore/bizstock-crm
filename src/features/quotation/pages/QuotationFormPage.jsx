@@ -17,7 +17,7 @@ import QuotationFormMobile from "../components/QuotationForm/QuotationFormMobile
 
 const QuotationFormPage = () => {
   const { id } = useParams();
-  const decryptedId = id ? decryptId(id) : null;
+  const decryptedId = id ? decryptId(id) || id : null;
   const navigate = useNavigate();
   const token = usetoken();
   const { toast } = useToast();
