@@ -3,6 +3,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import StatusToggle from "@/components/toggle/StatusToggle";
+import { navigateToQuotationEdit } from "@/api";
 
 export const QuotationMobileList = ({ items, userId, onDelete, onStatusChange }) => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export const QuotationMobileList = ({ items, userId, onDelete, onStatusChange })
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-blue-500"
-                    onClick={() => navigate(`/quotation/form/${item.id}`)}
+                    onClick={() => navigateToQuotationEdit(navigate, item.id)}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>

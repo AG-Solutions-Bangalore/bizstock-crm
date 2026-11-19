@@ -93,9 +93,8 @@ export function NavUser({ user }) {
               </DropdownMenuTrigger>
               <SidebarMenuButton
                 size="lg"
-                className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-0 cursor-text data-[state=open]: ${
-                  sidebar ? "text-red-950" : "hidden"
-                }`}
+                className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-0 cursor-text data-[state=open]: ${sidebar ? "text-red-950" : "hidden"
+                  }`}
               >
                 <div className="rounded-lg bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600  px-4 py-2 w-full  h-10 ">
                   <div className="flex justify-between items-center h-full w-full text-xs leading-tight text-center">
@@ -106,7 +105,7 @@ export function NavUser({ user }) {
                       </span>
                     </span>
                     <span className="flex items-center gap-1 font-semibold">
-                      Updated on : 17/07/2026
+                      Updated on : 19/11/2026
                     </span>
                   </div>
                 </div>

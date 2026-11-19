@@ -88,7 +88,13 @@ export const PreBookingFormTable = ({
                     options={batchOptions[index] || []}
                     placeholder="Batch"
                   />
+                  {row.pre_booking_sub_batch_no && (
+                    <div className="text-[10px] mt-1 text-gray-500">
+                      Batch No: {row.pre_booking_sub_batch_no}
+                    </div>
+                  )}
                 </TableCell>
+
               )}
               <TableCell>
                 <MemoizedSelect
