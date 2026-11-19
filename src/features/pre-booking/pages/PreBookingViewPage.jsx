@@ -25,6 +25,7 @@ const PreBookingViewPage = () => {
 
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
+  const userbatch = useSelector((state) => state.auth?.branch_batch);
   const columnVisibility = useSelector(
     (state) => state.dispatchcolumnVisibility,
   );
@@ -76,6 +77,11 @@ const PreBookingViewPage = () => {
   const prebooking = prebookingData?.prebooking || {};
   const buyer = prebookingData?.buyer || {};
   const prebookingsub = prebookingData?.prebookingsub || [];
+  const hasBatch =
+    userbatch?.toLowerCase() === "yes" &&
+    prebookingsub.some((row) =>
+      Boolean(String(row.pre_booking_sub_batch_no || row.batch_no || "").trim()),
+    );
   const preBookingDate = prebooking.pre_booking_date
     ? moment(prebooking.pre_booking_date).format("DD-MMM-YYYY")
     : "";
@@ -164,6 +170,11 @@ const PreBookingViewPage = () => {
               <th rowSpan={2} className="p-2 border border-black">
                 SIZE
               </th>
+              {hasBatch && (
+                <th rowSpan={2} className="p-2 border border-black text-center">
+                  BATCH
+                </th>
+              )}
               {singlebranch === "Yes" && doublebranch === "Yes" ? (
                 <th className="border border-black" colSpan={2}>
                   QUANTITY
@@ -204,6 +215,11 @@ const PreBookingViewPage = () => {
                 <td className="p-2 border border-black text-center">
                   {row.item_size}
                 </td>
+                {hasBatch && (
+                  <td className="p-2 border border-black text-center">
+                    {row.pre_booking_sub_batch_no || row.batch_no || ""}
+                  </td>
+                )}
                 {singlebranch === "Yes" && doublebranch === "Yes" ? (
                   <>
                     <td className="p-2 border border-black text-center">
@@ -228,6 +244,9 @@ const PreBookingViewPage = () => {
                 TOTAL
               </td>
               <td className="p-2 border border-black" />
+              {hasBatch && (
+                <td className="p-2 border border-black" />
+              )}
               {singlebranch === "Yes" && doublebranch === "Yes" ? (
                 <>
                   <td className="p-2 border border-black text-center">

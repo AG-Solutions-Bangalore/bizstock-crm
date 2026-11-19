@@ -23,6 +23,7 @@ const DispatchReturnViewPage = () => {
 
   const singlebranch = useSelector((state) => state.auth.branch_s_unit);
   const doublebranch = useSelector((state) => state.auth.branch_d_unit);
+  const userbatch = useSelector((state) => state.auth?.branch_batch);
 
   const { data: dispatchData, isLoading } = useQuery({
     queryKey: ["dispatch-return", decryptedId],
@@ -69,6 +70,11 @@ const DispatchReturnViewPage = () => {
   const dispatch = dispatchData?.dispatch || {};
   const buyer = dispatchData?.buyer || {};
   const dispatchSub = dispatchData?.dispatchSub || [];
+  const hasBatch =
+    userbatch?.toLowerCase() === "yes" &&
+    dispatchSub.some((row) =>
+      Boolean(String(row.dispatch_sub_batch_no || row.batch_no || "").trim()),
+    );
   const dispatchDate = dispatch.dispatch_date
     ? moment(dispatch.dispatch_date).format("DD-MMM-YYYY")
     : "";
@@ -151,6 +157,11 @@ const DispatchReturnViewPage = () => {
               <th rowSpan={2} className="p-2 border border-black">
                 SIZE
               </th>
+              {hasBatch && (
+                <th rowSpan={2} className="p-2 border border-black text-center">
+                  BATCH
+                </th>
+              )}
               {singlebranch === "Yes" && doublebranch === "Yes" ? (
                 <th className="border border-black" colSpan={2}>
                   QUANTITY
@@ -177,6 +188,11 @@ const DispatchReturnViewPage = () => {
                 <td className="p-2 border border-black text-center">
                   {row.item_size}
                 </td>
+                {hasBatch && (
+                  <td className="p-2 border border-black text-center">
+                    {row.dispatch_sub_batch_no || row.batch_no || ""}
+                  </td>
+                )}
                 {singlebranch === "Yes" && doublebranch === "Yes" ? (
                   <>
                     <td className="p-2 border border-black text-center">
@@ -196,6 +212,9 @@ const DispatchReturnViewPage = () => {
             <tr className="bg-gray-100 font-bold">
               <td className="p-2 border border-black">TOTAL</td>
               <td className="p-2 border border-black" />
+              {hasBatch && (
+                <td className="p-2 border border-black" />
+              )}
               {singlebranch === "Yes" && doublebranch === "Yes" ? (
                 <>
                   <td className="p-2 border border-black text-center">
